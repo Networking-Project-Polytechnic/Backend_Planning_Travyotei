@@ -1,37 +1,14 @@
-package com.example.agencyadmin.Models;
+package com.example.agencyadmin.DTO;
 
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
-
-@Entity(name = "schedules")
-public class Schedule {
-    @Id 
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "scheduleid", updatable = false, nullable = false)
+public class ScheduleDTO {
     private UUID scheduleid;
-    @NotNull
-    @Column(name = "date")  
     private String date;
-    @NotNull
-    @Column(name = "arrivaltime")
     private String arrivaltime;
-    @NotNull
-    @Column(name = "departuretime")
     private String departuretime;
-    @NotNull
-    @Column(name = "routeid")
     private String routeid;
-    @NotNull
-    @Column(name = "busid")
     private String busid;
-    @NotNull
-    @Column(name = "agencyid")
     private String agencyid;
 
     
@@ -79,6 +56,5 @@ public class Schedule {
     }
 
     
-
     
 }

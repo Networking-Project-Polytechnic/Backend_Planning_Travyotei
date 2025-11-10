@@ -1,30 +1,12 @@
-package com.example.agencyadmin.Models;
+package com.example.agencyadmin.DTO;
 
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
-
-@Entity(name = "routes")
-public class Route {
-    @Id 
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "routeid", updatable = false, nullable = false)
+public class RouteDTO {
     private UUID routeid;
-    @NotNull 
-    @Column(name = "startlocationid", nullable = false)
     private String startlocationid;
-    @NotNull 
-    @Column(name = "endlocationid", nullable = false)
     private String endlocationid;
-    @NotNull 
-    @Column(name = "agencyid", nullable = false, unique = true)
     private String agencyid;
-
     
     public UUID getRouteid() {
         return routeid;
@@ -53,4 +35,3 @@ public class Route {
 
     
 }
-

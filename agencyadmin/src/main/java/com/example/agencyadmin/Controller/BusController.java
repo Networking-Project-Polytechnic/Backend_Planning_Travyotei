@@ -33,7 +33,7 @@ public class BusController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Buses> getBusById(UUID id){
+    public ResponseEntity<Buses> getBusById(@PathVariable UUID id){
         return busService.getBusById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -56,6 +56,8 @@ public class BusController {
         busService.deleteBus(id);
         return ResponseEntity.noContent().build();
     }
+
+    //add a seperate entity for bus types.
 
 
 }

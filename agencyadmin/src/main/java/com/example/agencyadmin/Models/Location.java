@@ -1,12 +1,46 @@
 package com.example.agencyadmin.Models;
 
-import jakarta.persistence.Entity;
+import java.util.UUID;
 
-//@Entity(name = "location")
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+
+@Entity(name = "location")
 public class Location {
-    private String locationid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "locationid", updatable = false, nullable = false)
+    private UUID locationid;
+    @NotNull
+    @Column(name = "locationname", unique = true)
     private String locationname;  
+    @NotNull
+    @Column(name= "agencyid", unique = true)
     private String agencyid;
+    
+    public UUID getLocationid() {
+        return locationid;
+    }
+    public void setLocationid(UUID locationid) {
+        this.locationid = locationid;
+    }
+    public String getLocationname() {
+        return locationname;
+    }
+    public void setLocationname(String locationname) {
+        this.locationname = locationname;
+    }
+    public String getAgencyid() {
+        return agencyid;
+    }
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
+    }
+
 
     
 }
