@@ -13,6 +13,7 @@ public class ScheduleMapper {
         schedule.setBusid(dto.getBusid());
         schedule.setAgencyid(dto.getAgencyid());
         schedule.setRouteid(dto.getRouteid());
+        schedule.setFairid(dto.getFairid());
         return schedule;                                                    
     }
     
@@ -24,6 +25,7 @@ public class ScheduleMapper {
         dto.setBusid(schedule.getBusid());
         dto.setAgencyid(schedule.getAgencyid());
         dto.setRouteid(schedule.getRouteid());
+        dto.setFairid(schedule.getFairid());
         return dto;
 
 
@@ -36,6 +38,7 @@ public class ScheduleMapper {
         schedule.setBusid(dto.getBusid());
         schedule.setAgencyid(dto.getAgencyid());
         schedule.setRouteid(dto.getRouteid());
+        schedule.setFairid(dto.getFairid());
     }
 }
 

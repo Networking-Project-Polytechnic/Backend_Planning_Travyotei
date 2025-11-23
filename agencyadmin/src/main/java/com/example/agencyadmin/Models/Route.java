@@ -22,7 +22,7 @@ public class Route {
     @Column(name = "endlocationid", nullable = false)
     private String endlocationid;
     @NotNull 
-    @Column(name = "agencyid", nullable = false, unique = true)
+    @Column(name = "agencyid", nullable = false)
     private String agencyid;
 
     

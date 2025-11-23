@@ -9,9 +9,18 @@ public class BusesDto {
     private int buscapacity;
     private String bustype;
     private String agencyid;
+    private String trackingid;
 
     public UUID getBusid() {
         return busid;
+    }
+
+    public String getTrackingid() {
+        return trackingid;
+    }
+
+    public void setTrackingid(String trackingid) {
+        this.trackingid = trackingid;
     }
 
     public void setBusid(UUID busid) {
@@ -49,5 +58,7 @@ public class BusesDto {
     public void setAgencyid(String agencyid) {
         this.agencyid = agencyid;
     }
+
+   
 }
 

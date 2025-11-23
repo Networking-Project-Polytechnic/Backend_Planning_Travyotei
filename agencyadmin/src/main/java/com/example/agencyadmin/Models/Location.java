@@ -19,7 +19,7 @@ public class Location {
     @Column(name = "locationname", unique = true)
     private String locationname;  
     @NotNull
-    @Column(name= "agencyid", unique = true)
+    @Column(name= "agencyid")
     private String agencyid;
     
     public UUID getLocationid() {

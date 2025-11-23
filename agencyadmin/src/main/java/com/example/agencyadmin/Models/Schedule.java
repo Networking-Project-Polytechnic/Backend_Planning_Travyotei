@@ -33,6 +33,9 @@ public class Schedule {
     @NotNull
     @Column(name = "agencyid")
     private String agencyid;
+    @NotNull
+    @Column(name = "fairid")
+    private String fairid;
 
     
     public UUID getScheduleid() {
@@ -77,6 +80,13 @@ public class Schedule {
     public void setAgencyid(String agencyid) {
         this.agencyid = agencyid;
     }
+    public String getFairid() {
+        return fairid;
+    }
+    public void setFairid(String fairid) {
+        this.fairid = fairid;
+    }
+    
 
     
 

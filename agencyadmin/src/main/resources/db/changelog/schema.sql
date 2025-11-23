@@ -1,4 +1,5 @@
-CREATE TABLE buses (
+
+CREATE TABLE  IF NOT EXISTS buses (
     busid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     busplatenumber VARCHAR(50) NOT NULL UNIQUE,
     buscapacity INT NOT NULL,

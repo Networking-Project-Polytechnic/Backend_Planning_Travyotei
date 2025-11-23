@@ -10,6 +10,7 @@ public class ScheduleDTO {
     private String routeid;
     private String busid;
     private String agencyid;
+    private String fairid;
 
     
     public UUID getScheduleid() {
@@ -54,6 +55,13 @@ public class ScheduleDTO {
     public void setAgencyid(String agencyid) {
         this.agencyid = agencyid;
     }
+    public String getFairid() {
+        return fairid;
+    }
+    public void setFairid(String fairid) {
+        this.fairid = fairid;
+    }
+    
 
     
     

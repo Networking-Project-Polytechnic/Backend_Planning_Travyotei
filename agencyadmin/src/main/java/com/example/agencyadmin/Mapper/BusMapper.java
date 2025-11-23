@@ -12,6 +12,8 @@ public class BusMapper {
         bus.setBuscapacity(dto.getBuscapacity());
         bus.setBustype(dto.getBustype());
         bus.setAgencyid(dto.getAgencyid());
+        bus.setTrackingid(dto.getTrackingid());
+       
         return bus;
     }
 
@@ -22,6 +24,7 @@ public class BusMapper {
         dto.setBuscapacity(bus.getBuscapacity());
         dto.setBustype(bus.getBustype());
         dto.setAgencyid(bus.getAgencyid());
+        dto.setTrackingid(bus.getTrackingid());
         return dto;
     }
     public static void updateEntityFromDto(BusesDto dto, Buses bus) {
@@ -29,5 +32,6 @@ public class BusMapper {
         bus.setBuscapacity(dto.getBuscapacity());
         bus.setBustype(dto.getBustype());
         bus.setAgencyid(dto.getAgencyid());
+        bus.setTrackingid(dto.getTrackingid());
     }
 }

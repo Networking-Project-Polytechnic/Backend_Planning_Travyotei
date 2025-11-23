@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 
-@Entity(name = "fairs")
+@Entity(name = "fair")
 public class Fair {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +19,7 @@ public class Fair {
     @Column(name = "fairamount", unique = true)
     private float fairamount;    
     @NotNull
-    @Column(name= "agencyid", unique = true)
+    @Column(name= "agencyid")
     private String agencyid;
     
     public UUID getFairid() {

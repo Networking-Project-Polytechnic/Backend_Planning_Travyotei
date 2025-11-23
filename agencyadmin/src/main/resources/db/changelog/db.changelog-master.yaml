@@ -1,4 +1,30 @@
 databaseChangeLog:
-  - include:
-      file: db/changelog/schema.sql
-      relativeToChangelogFile: false
+  - changeSet:
+      id: schema-v1
+      author: aghet
+      changes:
+        - sqlFile:
+            path: schema.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: schema-v2
+      author: aghet
+      changes:
+        - sqlFile:
+            path: schema2.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: schema-v3
+      author: aghet
+      changes:
+        - sqlFile:
+            path: schema3.sql
+            relativeToChangelogFile: true
+  - changeSet:
+      id: data-v1
+      author: aghet
+      changes:
+        - sqlFile:
+            path: data.sql
+            relativeToChangelogFile: true

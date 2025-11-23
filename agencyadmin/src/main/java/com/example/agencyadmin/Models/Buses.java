@@ -28,9 +28,15 @@ public class Buses {
     private String bustype; 
     
     @NotNull
-    @Column(name= "agencyid", unique = true)
+    @Column(name= "agencyid")
     private String agencyid;
 
+    @NotNull
+    @Column(name = "trackingid", unique = true)
+    private String trackingid;
+
+
+    
 
     public UUID getBusid() {
         return busid;
@@ -70,8 +76,17 @@ public class Buses {
 
     public void setAgencyid(String agencyid) {
         this.agencyid = agencyid;
-    }  
+    }
 
+    public String getTrackingid() {
+        return trackingid;
+    }
+
+    public void setTrackingid(String trackingid) {
+        this.trackingid = trackingid;
+    }
+
+    
     
 
    
