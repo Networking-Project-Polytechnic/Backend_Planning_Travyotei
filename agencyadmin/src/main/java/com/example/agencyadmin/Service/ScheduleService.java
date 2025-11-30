@@ -22,6 +22,13 @@ public class ScheduleService {
       
     }
 
+    public List<ScheduleDTO> getAllSchedules() {
+        return scheduleRepo.findAll()
+                           .stream()
+                           .map(ScheduleMapper::toDto)
+                           .collect(Collectors.toList());
+    }
+
     public List<ScheduleDTO> getSchedulesByAgencyId(String agencyId) {
         return scheduleRepo.findByAgencyid(agencyId)
                            .stream()

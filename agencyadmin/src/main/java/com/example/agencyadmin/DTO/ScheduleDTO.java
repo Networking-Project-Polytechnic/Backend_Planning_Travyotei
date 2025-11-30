@@ -7,10 +7,10 @@ public class ScheduleDTO {
     private String date;
     private String arrivaltime;
     private String departuretime;
-    private String routeid;
-    private String busid;
+    private UUID routeid;
+    private UUID busid;
     private String agencyid;
-    private String fairid;
+    private UUID fairid;
 
     
     public UUID getScheduleid() {
@@ -37,16 +37,16 @@ public class ScheduleDTO {
     public void setDeparturetime(String departuretime) {
         this.departuretime = departuretime;
     }
-    public String getRouteid() {
+    public UUID getRouteid() {
         return routeid;
     }
-    public void setRouteid(String routeid) {
+    public void setRouteid(UUID routeid) {
         this.routeid = routeid;
     }
-    public String getBusid() {
+    public UUID getBusid() {
         return busid;
     }
-    public void setBusid(String busid) {
+    public void setBusid(UUID busid) {
         this.busid = busid;
     }
     public String getAgencyid() {
@@ -55,10 +55,10 @@ public class ScheduleDTO {
     public void setAgencyid(String agencyid) {
         this.agencyid = agencyid;
     }
-    public String getFairid() {
+    public UUID getFairid() {
         return fairid;
     }
-    public void setFairid(String fairid) {
+    public void setFairid(UUID fairid) {
         this.fairid = fairid;
     }
     

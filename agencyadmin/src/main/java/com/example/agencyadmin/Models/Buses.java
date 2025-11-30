@@ -33,7 +33,7 @@ public class Buses {
 
     @NotNull
     @Column(name = "trackingid", unique = true)
-    private String trackingid;
+    private UUID trackingid;
 
 
     
@@ -78,11 +78,11 @@ public class Buses {
         this.agencyid = agencyid;
     }
 
-    public String getTrackingid() {
+    public UUID getTrackingid() {
         return trackingid;
     }
 
-    public void setTrackingid(String trackingid) {
+    public void setTrackingid(UUID trackingid) {
         this.trackingid = trackingid;
     }
 

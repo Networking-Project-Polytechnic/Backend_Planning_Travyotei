@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public class RouteDTO {
     private UUID routeid;
-    private String startlocationid;
-    private String endlocationid;
+    private UUID startlocationid;
+    private UUID endlocationid;
     private String agencyid;
     
     public UUID getRouteid() {
@@ -14,16 +14,16 @@ public class RouteDTO {
     public void setRouteid(UUID routeid) {
         this.routeid = routeid;
     }
-    public String getStartlocationid() {
+    public UUID getStartlocationid() {
         return startlocationid;
     }
-    public void setStartlocationid(String startlocationid) {
+    public void setStartlocationid(UUID startlocationid) {
         this.startlocationid = startlocationid;
     }
-    public String getEndlocationid() {
+    public UUID getEndlocationid() {
         return endlocationid;
     }
-    public void setEndlocationid(String endlocationid) {
+    public void setEndlocationid(UUID endlocationid) {
         this.endlocationid = endlocationid;
     }
     public String getAgencyid() {

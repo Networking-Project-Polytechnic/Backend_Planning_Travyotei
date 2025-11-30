@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.agencyadmin.DTO.ScheduleDTO;
 import com.example.agencyadmin.Service.ScheduleService;
 
@@ -24,6 +23,12 @@ public class ScheduleController {
 
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
+    }
+    @GetMapping
+    public ResponseEntity<List<ScheduleDTO>> getAllSchedules() {
+        return ResponseEntity.ok(
+            scheduleService.getAllSchedules()
+        );
     }
 
     @GetMapping("/{agencyId}")

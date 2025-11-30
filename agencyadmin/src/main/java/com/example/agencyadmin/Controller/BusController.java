@@ -1,6 +1,7 @@
 package com.example.agencyadmin.Controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -27,16 +28,14 @@ public class BusController {
     }
     
     @GetMapping
-    public ResponseEntity<List<Buses>> getAllBuses(){
-        List<Buses> buses = busService.getAllBuses();
+    public ResponseEntity<List<BusesDto>> getAllBuses(){
+        List<BusesDto> buses = busService.getAllBuses();
         return ResponseEntity.ok(buses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Buses> getBusById(@PathVariable UUID id){
-        return busService.getBusById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public Optional<BusesDto> getBusById(@PathVariable UUID id){
+        return busService.getBusById(id);
     }
 
     @PostMapping

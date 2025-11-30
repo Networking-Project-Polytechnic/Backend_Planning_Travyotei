@@ -20,6 +20,7 @@ public class BusMapper {
     // Convert Entity to DTO
     public static BusesDto toDto(Buses bus) {
         BusesDto dto = new BusesDto();
+        dto.setBusid(bus.getBusid());
         dto.setBusplatenumber(bus.getBusplatenumber());
         dto.setBuscapacity(bus.getBuscapacity());
         dto.setBustype(bus.getBustype());

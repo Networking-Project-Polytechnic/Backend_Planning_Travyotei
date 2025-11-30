@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "locationid", updatable = false, nullable = false)
+    @Column(name = "locationid", updatable = false, nullable = false, columnDefinition = "uuid DEFAULT uuid_generate_v4()")
     private UUID locationid;
     @NotNull
     @Column(name = "locationname", unique = true)

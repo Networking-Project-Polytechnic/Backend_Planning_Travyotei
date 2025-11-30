@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 public class Fair {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "fairid", updatable = false, nullable = false)
+    @Column(name = "fairid", updatable = false, nullable = false, columnDefinition = "uuid DEFAULT uuid_generate_v4()")
     private UUID fairid;
     @NotNull
     @Column(name = "fairamount", unique = true)

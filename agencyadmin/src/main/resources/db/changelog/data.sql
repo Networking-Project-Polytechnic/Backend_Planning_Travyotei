@@ -1,84 +1,151 @@
 -- ========================
--- Buses
+-- Insert Buses (7 records)
 -- ========================
-INSERT INTO buses (busplatenumber, buscapacity, bustype, trackingid, agencyid)
-VALUES 
-('ABC-123', 50, 'MiniBus', uuid_generate_v4(), 'AGENCY1'),
-('DEF-456', 40, 'Coach', uuid_generate_v4(), 'AGENCY1'),
-('GHI-789', 60, 'DoubleDecker', uuid_generate_v4(), 'AGENCY2'),
-('JKL-321', 30, 'MiniBus', uuid_generate_v4(), 'AGENCY2'),
-('MNO-654', 45, 'Coach', uuid_generate_v4(), 'AGENCY3');
+INSERT INTO buses (busid, busplatenumber, buscapacity, bustype, trackingid, agencyid) VALUES
+(uuid_generate_v4(), 'ABC-1234', 45, 'Standard', uuid_generate_v4(), 'AGENCY001'),
+(uuid_generate_v4(), 'XYZ-5678', 52, 'Luxury', uuid_generate_v4(), 'AGENCY001'),
+(uuid_generate_v4(), 'DEF-9012', 38, 'Mini', uuid_generate_v4(), 'AGENCY002'),
+(uuid_generate_v4(), 'GHI-3456', 45, 'Standard', uuid_generate_v4(), 'AGENCY002'),
+(uuid_generate_v4(), 'JKL-7890', 60, 'Double Decker', uuid_generate_v4(), 'AGENCY003'),
+(uuid_generate_v4(), 'MNO-2345', 40, 'Standard', uuid_generate_v4(), 'AGENCY003'),
+(uuid_generate_v4(), 'PQR-6789', 35, 'Mini', uuid_generate_v4(), 'AGENCY001');
 
 -- ========================
--- Fair
+-- Insert Fair (7 records)
 -- ========================
-INSERT INTO fair (fairamount, agencyid)
-VALUES
-(2.50, 'AGENCY1'),
-(3.00, 'AGENCY1'),
-(2.75, 'AGENCY2'),
-(3.50, 'AGENCY2'),
-(4.00, 'AGENCY3');
+INSERT INTO fair (fairid, fairamount, agencyid) VALUES
+(uuid_generate_v4(), 5.50, 'AGENCY001'),
+(uuid_generate_v4(), 7.00, 'AGENCY001'),
+(uuid_generate_v4(), 4.75, 'AGENCY002'),
+(uuid_generate_v4(), 6.25, 'AGENCY002'),
+(uuid_generate_v4(), 8.50, 'AGENCY003'),
+(uuid_generate_v4(), 5.00, 'AGENCY003'),
+(uuid_generate_v4(), 9.00, 'AGENCY001');
 
 -- ========================
--- Location
+-- Insert Location (7 records)
 -- ========================
-INSERT INTO location (locationname, agencyid)
-VALUES
-('Downtown', 'AGENCY1'),
-('Airport', 'AGENCY1'),
-('Central Station', 'AGENCY2'),
-('University', 'AGENCY2'),
-('Mall', 'AGENCY3');
+INSERT INTO location (locationid, locationname, agencyid) VALUES
+(uuid_generate_v4(), 'Central Station', 'AGENCY001'),
+(uuid_generate_v4(), 'Airport Terminal', 'AGENCY001'),
+(uuid_generate_v4(), 'North Plaza', 'AGENCY002'),
+(uuid_generate_v4(), 'South Beach', 'AGENCY002'),
+(uuid_generate_v4(), 'East Market', 'AGENCY003'),
+(uuid_generate_v4(), 'West Park', 'AGENCY003'),
+(uuid_generate_v4(), 'Downtown Hub', 'AGENCY001');
 
 -- ========================
--- Route
+-- Insert Route (7 records)
 -- ========================
--- First, get the UUIDs for the locations to reference
--- Assume we have the following UUIDs:
--- Downtown: uuid1, Airport: uuid2, Central Station: uuid3, University: uuid4, Mall: uuid5
--- Replace these manually or use SELECT to get them
-INSERT INTO route (startlocationid, endlocationid, agencyid)
-VALUES
-((SELECT locationid FROM location WHERE locationname='Downtown'), 
- (SELECT locationid FROM location WHERE locationname='Airport'), 'AGENCY1'),
-((SELECT locationid FROM location WHERE locationname='Airport'), 
- (SELECT locationid FROM location WHERE locationname='Downtown'), 'AGENCY1'),
-((SELECT locationid FROM location WHERE locationname='Central Station'), 
- (SELECT locationid FROM location WHERE locationname='University'), 'AGENCY2'),
-((SELECT locationid FROM location WHERE locationname='University'), 
- (SELECT locationid FROM location WHERE locationname='Central Station'), 'AGENCY2'),
-((SELECT locationid FROM location WHERE locationname='Mall'), 
- (SELECT locationid FROM location WHERE locationname='Mall'), 'AGENCY3');
+INSERT INTO route (routeid, startlocationid, endlocationid, agencyid)
+SELECT uuid_generate_v4(), l1.locationid, l2.locationid, 'AGENCY001'
+FROM location l1, location l2
+WHERE l1.locationname = 'Central Station' AND l2.locationname = 'Airport Terminal';
+
+INSERT INTO route (routeid, startlocationid, endlocationid, agencyid)
+SELECT uuid_generate_v4(), l1.locationid, l2.locationid, 'AGENCY001'
+FROM location l1, location l2
+WHERE l1.locationname = 'Downtown Hub' AND l2.locationname = 'Central Station';
+
+INSERT INTO route (routeid, startlocationid, endlocationid, agencyid)
+SELECT uuid_generate_v4(), l1.locationid, l2.locationid, 'AGENCY002'
+FROM location l1, location l2
+WHERE l1.locationname = 'North Plaza' AND l2.locationname = 'South Beach';
+
+INSERT INTO route (routeid, startlocationid, endlocationid, agencyid)
+SELECT uuid_generate_v4(), l1.locationid, l2.locationid, 'AGENCY002'
+FROM location l1, location l2
+WHERE l1.locationname = 'South Beach' AND l2.locationname = 'North Plaza';
+
+INSERT INTO route (routeid, startlocationid, endlocationid, agencyid)
+SELECT uuid_generate_v4(), l1.locationid, l2.locationid, 'AGENCY003'
+FROM location l1, location l2
+WHERE l1.locationname = 'East Market' AND l2.locationname = 'West Park';
+
+INSERT INTO route (routeid, startlocationid, endlocationid, agencyid)
+SELECT uuid_generate_v4(), l1.locationid, l2.locationid, 'AGENCY003'
+FROM location l1, location l2
+WHERE l1.locationname = 'West Park' AND l2.locationname = 'East Market';
+
+INSERT INTO route (routeid, startlocationid, endlocationid, agencyid)
+SELECT uuid_generate_v4(), l1.locationid, l2.locationid, 'AGENCY001'
+FROM location l1, location l2
+WHERE l1.locationname = 'Airport Terminal' AND l2.locationname = 'Downtown Hub';
 
 -- ========================
--- Schedule
+-- Insert Schedule (7 records)
 -- ========================
--- Again, link routeid, busid, fairid using subqueries
-INSERT INTO schedule (date, arrivaltime, departuretime, routeid, busid, fairid, agencyid)
-VALUES
-('2025-11-25', '09:00', '08:00',
- (SELECT routeid FROM route LIMIT 1),
- (SELECT busid FROM buses LIMIT 1),
- (SELECT fairid FROM fair LIMIT 1),
- 'AGENCY1'),
-('2025-11-25', '10:00', '09:00',
- (SELECT routeid FROM route LIMIT 2 OFFSET 1),
- (SELECT busid FROM buses LIMIT 1 OFFSET 1),
- (SELECT fairid FROM fair LIMIT 1 OFFSET 1),
- 'AGENCY1'),
-('2025-11-25', '11:00', '10:00',
- (SELECT routeid FROM route LIMIT 1 OFFSET 2),
- (SELECT busid FROM buses LIMIT 1 OFFSET 2),
- (SELECT fairid FROM fair LIMIT 1 OFFSET 2),
- 'AGENCY2'),
-('2025-11-25', '12:00', '11:00',
- (SELECT routeid FROM route LIMIT 1 OFFSET 3),
- (SELECT busid FROM buses LIMIT 1 OFFSET 3),
- (SELECT fairid FROM fair LIMIT 1 OFFSET 3),
- 'AGENCY2'),
-('2025-11-25', '13:00', '12:00',
- (SELECT routeid FROM route LIMIT 1 OFFSET 4),
- (SELECT busid FROM buses LIMIT 1 OFFSET 4),
- (SELECT fairid FROM fair LIMIT 1 OFFSET 4),
- 'AGENCY3');
+INSERT INTO schedule (scheduleid, date, arrivaltime, departuretime, routeid, busid, fairid, agencyid)
+SELECT uuid_generate_v4(), '2024-12-01', '09:00:00', '08:00:00',
+       r.routeid, b.busid, f.fairid, 'AGENCY001'
+FROM route r
+JOIN location l1 ON r.startlocationid = l1.locationid
+JOIN location l2 ON r.endlocationid = l2.locationid
+JOIN buses b ON b.busplatenumber = 'ABC-1234'
+JOIN fair f ON f.fairamount = 5.50 AND f.agencyid = 'AGENCY001'
+WHERE l1.locationname = 'Central Station' AND l2.locationname = 'Airport Terminal';
+
+INSERT INTO schedule (scheduleid, date, arrivaltime, departuretime, routeid, busid, fairid, agencyid)
+SELECT uuid_generate_v4(), '2024-12-01', '14:30:00', '13:30:00',
+       r.routeid, b.busid, f.fairid, 'AGENCY001'
+FROM route r
+JOIN location l1 ON r.startlocationid = l1.locationid
+JOIN location l2 ON r.endlocationid = l2.locationid
+JOIN buses b ON b.busplatenumber = 'XYZ-5678'
+JOIN fair f ON f.fairamount = 7.00 AND f.agencyid = 'AGENCY001'
+WHERE l1.locationname = 'Downtown Hub' AND l2.locationname = 'Central Station';
+
+-- Schedule 3
+INSERT INTO schedule (scheduleid, date, arrivaltime, departuretime, routeid, busid, fairid, agencyid)
+SELECT uuid_generate_v4(), '2024-12-02', '11:00:00', '10:00:00',
+       r.routeid, b.busid, f.fairid, 'AGENCY002'
+FROM route r
+JOIN location l1 ON r.startlocationid = l1.locationid
+JOIN location l2 ON r.endlocationid = l2.locationid
+JOIN buses b ON b.busplatenumber = 'DEF-9012'
+JOIN fair f ON f.fairamount = 4.75 AND f.agencyid = 'AGENCY002'
+WHERE l1.locationname = 'North Plaza' AND l2.locationname = 'South Beach';
+
+-- Schedule 4
+INSERT INTO schedule (scheduleid, date, arrivaltime, departuretime, routeid, busid, fairid, agencyid)
+SELECT uuid_generate_v4(), '2024-12-02', '16:45:00', '15:45:00',
+       r.routeid, b.busid, f.fairid, 'AGENCY002'
+FROM route r
+JOIN location l1 ON r.startlocationid = l1.locationid
+JOIN location l2 ON r.endlocationid = l2.locationid
+JOIN buses b ON b.busplatenumber = 'GHI-3456'
+JOIN fair f ON f.fairamount = 6.25 AND f.agencyid = 'AGENCY002'
+WHERE l1.locationname = 'South Beach' AND l2.locationname = 'North Plaza';
+
+-- Schedule 5
+INSERT INTO schedule (scheduleid, date, arrivaltime, departuretime, routeid, busid, fairid, agencyid)
+SELECT uuid_generate_v4(), '2024-12-03', '12:30:00', '11:00:00',
+       r.routeid, b.busid, f.fairid, 'AGENCY003'
+FROM route r
+JOIN location l1 ON r.startlocationid = l1.locationid
+JOIN location l2 ON r.endlocationid = l2.locationid
+JOIN buses b ON b.busplatenumber = 'JKL-7890'
+JOIN fair f ON f.fairamount = 8.50 AND f.agencyid = 'AGENCY003'
+WHERE l1.locationname = 'East Market' AND l2.locationname = 'West Park';
+
+-- Schedule 6
+INSERT INTO schedule (scheduleid, date, arrivaltime, departuretime, routeid, busid, fairid, agencyid)
+SELECT uuid_generate_v4(), '2024-12-03', '18:00:00', '17:00:00',
+       r.routeid, b.busid, f.fairid, 'AGENCY003'
+FROM route r
+JOIN location l1 ON r.startlocationid = l1.locationid
+JOIN location l2 ON r.endlocationid = l2.locationid
+JOIN buses b ON b.busplatenumber = 'MNO-2345'
+JOIN fair f ON f.fairamount = 5.00 AND f.agencyid = 'AGENCY003'
+WHERE l1.locationname = 'West Park' AND l2.locationname = 'East Market';
+
+-- Schedule 7
+INSERT INTO schedule (scheduleid, date, arrivaltime, departuretime, routeid, busid, fairid, agencyid)
+SELECT uuid_generate_v4(), '2024-12-04', '10:30:00', '09:00:00',
+       r.routeid, b.busid, f.fairid, 'AGENCY001'
+FROM route r
+JOIN location l1 ON r.startlocationid = l1.locationid
+JOIN location l2 ON r.endlocationid = l2.locationid
+JOIN buses b ON b.busplatenumber = 'PQR-6789'
+JOIN fair f ON f.fairamount = 9.00 AND f.agencyid = 'AGENCY001'
+WHERE l1.locationname = 'Airport Terminal' AND l2.locationname = 'Downtown Hub';

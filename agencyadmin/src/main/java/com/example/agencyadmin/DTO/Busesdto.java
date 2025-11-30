@@ -9,17 +9,17 @@ public class BusesDto {
     private int buscapacity;
     private String bustype;
     private String agencyid;
-    private String trackingid;
+    private UUID trackingid;
 
     public UUID getBusid() {
         return busid;
     }
 
-    public String getTrackingid() {
+    public UUID getTrackingid() {
         return trackingid;
     }
 
-    public void setTrackingid(String trackingid) {
+    public void setTrackingid(UUID trackingid) {
         this.trackingid = trackingid;
     }
 

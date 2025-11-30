@@ -22,13 +22,18 @@ public class BusService {
 
 
 
-    public List<Buses> getAllBuses() {
-        return busesRepository.findAll();
+   public List<BusesDto> getAllBuses() {
+        return busesRepository.findAll()
+                .stream()
+                .map(BusMapper::toDto)
+                .toList();
     }
 
-    public Optional<Buses> getBusById(UUID id) {
-        return busesRepository.findById(id);
+    public Optional<BusesDto> getBusById(UUID id) {
+        return busesRepository.findById(id)
+                .map(BusMapper::toDto);
     }
+
 
     public Buses createBus(BusesDto dto) {
         if (busesRepository.existsByBusplatenumber(dto.getBusplatenumber())) {

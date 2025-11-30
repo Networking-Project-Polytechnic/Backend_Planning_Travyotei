@@ -12,7 +12,7 @@ import com.example.agencyadmin.Models.Route;
 @Repository
 public interface RouteRepo extends JpaRepository<Route, UUID> {
     List<Route> findByAgencyid(String agencyid);
-    Boolean existsByAgencyidAndStartlocationidAndEndlocationid(String agencyid,String startlocationid,String endlocationid);
+    Boolean existsByAgencyidAndStartlocationidAndEndlocationid(String agencyid,UUID startlocationid,UUID endlocationid);
     
 }
 

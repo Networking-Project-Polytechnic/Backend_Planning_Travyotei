@@ -9,11 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 
-@Entity(name = "schedules")
+@Entity(name = "schedule")
 public class Schedule {
     @Id 
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "scheduleid", updatable = false, nullable = false)
+    @Column(name = "scheduleid", updatable = false, nullable = false, columnDefinition = "uuid DEFAULT uuid_generate_v4()")
     private UUID scheduleid;
     @NotNull
     @Column(name = "date")  
@@ -26,16 +26,16 @@ public class Schedule {
     private String departuretime;
     @NotNull
     @Column(name = "routeid")
-    private String routeid;
+    private UUID routeid;
     @NotNull
     @Column(name = "busid")
-    private String busid;
+    private UUID busid;
     @NotNull
     @Column(name = "agencyid")
     private String agencyid;
     @NotNull
     @Column(name = "fairid")
-    private String fairid;
+    private UUID fairid;
 
     
     public UUID getScheduleid() {
@@ -62,16 +62,16 @@ public class Schedule {
     public void setDeparturetime(String departuretime) {
         this.departuretime = departuretime;
     }
-    public String getRouteid() {
+    public UUID getRouteid() {
         return routeid;
     }
-    public void setRouteid(String routeid) {
+    public void setRouteid(UUID routeid) {
         this.routeid = routeid;
     }
-    public String getBusid() {
+    public UUID getBusid() {
         return busid;
     }
-    public void setBusid(String busid) {
+    public void setBusid(UUID busid) {
         this.busid = busid;
     }
     public String getAgencyid() {
@@ -80,10 +80,10 @@ public class Schedule {
     public void setAgencyid(String agencyid) {
         this.agencyid = agencyid;
     }
-    public String getFairid() {
+    public UUID getFairid() {
         return fairid;
     }
-    public void setFairid(String fairid) {
+    public void setFairid(UUID fairid) {
         this.fairid = fairid;
     }
     
