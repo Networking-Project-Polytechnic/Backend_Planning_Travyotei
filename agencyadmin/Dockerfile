@@ -1,14 +1,28 @@
-# Use OpenJDK
-FROM eclipse-temurin:17-jdk
+# ============================
+# 1) BUILD STAGE
+# ============================
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
 
-# Set working directory in container
 WORKDIR /app
 
-# Copy your built JAR into the container
-COPY target/agencyadmin-0.0.1-SNAPSHOT.jar app.jar
+# Copy Maven files first (cache optimization)
+COPY pom.xml .
+COPY src ./src
 
-# Expose port 8080
+# Build the JAR (skip tests for faster builds)
+RUN mvn clean package -DskipTests
+
+
+# ============================
+# 2) RUN STAGE
+# ============================
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+# Copy the built jar from the builder stage
+COPY --from=builder /app/target/*.jar app.jar
+
 EXPOSE 8080
 
-# Run the app
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
