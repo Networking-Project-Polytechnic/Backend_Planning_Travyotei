@@ -16,7 +16,8 @@ RUN mvn clean package -DskipTests
 # ============================
 # 2) RUN STAGE
 # ============================
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:21-jdk
+
 WORKDIR /app
 
 # Copy the built jar from the builder stage
