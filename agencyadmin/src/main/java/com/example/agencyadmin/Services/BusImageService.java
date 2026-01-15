@@ -1,0 +1,151 @@
+package com.example.agencyadmin.Services;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.example.agencyadmin.DTOs.BusImageDTO;
+import com.example.agencyadmin.Models.BusImage;
+import com.example.agencyadmin.Repositories.BusImageRepository;
+import com.example.agencyadmin.Mappers.BusImageMapper;
+
+/**
+ * Service class for BusImage entity.
+ * This service encapsulates business logic for BusImage operations.
+ * It handles interactions between the controller and repository layers.
+ * All business logic related to bus images should be implemented in this service.
+ */
+@Service
+public class BusImageService {
+    
+    /** The BusImage repository for database operations */
+    @Autowired
+    private BusImageRepository busImageRepository;
+    
+    /** The BusImage mapper for converting between entities and DTOs */
+    @Autowired
+    private BusImageMapper busImageMapper;
+    
+    /**
+     * Create a new bus image
+     * @param busImageDTO the bus image data transfer object
+     * @return the created bus image DTO
+     */
+    public BusImageDTO createBusImage(BusImageDTO busImageDTO) {
+        BusImage busImage = busImageMapper.toEntity(busImageDTO);
+        BusImage savedBusImage = busImageRepository.save(busImage);
+        return busImageMapper.toDTO(savedBusImage);
+    }
+    
+    /**
+     * Get a bus image by its ID
+     * @param imageId the ID of the bus image
+     * @return the bus image DTO if found
+     */
+    public Optional<BusImageDTO> getBusImageById(UUID imageId) {
+        Optional<BusImage> busImage = busImageRepository.findById(imageId);
+        return busImage.map(busImageMapper::toDTO);
+    }
+    
+    /**
+     * Get all bus images
+     * @return list of all bus image DTOs
+     */
+    public List<BusImageDTO> getAllBusImages() {
+        List<BusImage> busImages = busImageRepository.findAll();
+        return busImages.stream().map(busImageMapper::toDTO).toList();
+    }
+    
+    /**
+     * Get all images for a specific bus
+     * @param busId the ID of the bus
+     * @return list of bus image DTOs for the bus
+     */
+    public List<BusImageDTO> getBusImagesByBusId(UUID busId) {
+        List<BusImage> busImages = busImageRepository.findByBusId(busId);
+        return busImages.stream().map(busImageMapper::toDTO).toList();
+    }
+    
+    /**
+     * Get a bus image by its S3 key
+     * @param s3Key the S3 key of the image
+     * @return the bus image DTO if found
+     */
+    public Optional<BusImageDTO> getBusImageByS3Key(String s3Key) {
+        Optional<BusImage> busImage = busImageRepository.findByS3Key(s3Key);
+        return busImage.map(busImageMapper::toDTO);
+    }
+    
+    /**
+     * Get the primary image for a bus
+     * @param busId the ID of the bus
+     * @return the primary bus image DTO if found
+     */
+    public Optional<BusImageDTO> getPrimaryBusImage(UUID busId) {
+        Optional<BusImage> busImage = busImageRepository.findFirstByBusIdAndIsPrimaryTrue(busId);
+        return busImage.map(busImageMapper::toDTO);
+    }
+    
+    /**
+     * Get all primary or non-primary images for a bus
+     * @param busId the ID of the bus
+     * @param isPrimary whether to get primary or non-primary images
+     * @return list of bus image DTOs
+     */
+    public List<BusImageDTO> getBusImagesByBusIdAndIsPrimary(UUID busId, Boolean isPrimary) {
+        List<BusImage> busImages = busImageRepository.findByBusIdAndIsPrimary(busId, isPrimary);
+        return busImages.stream().map(busImageMapper::toDTO).toList();
+    }
+    
+    /**
+     * Update an existing bus image
+     * @param imageId the ID of the bus image to update
+     * @param busImageDTO the updated bus image data
+     * @return the updated bus image DTO
+     */
+    public Optional<BusImageDTO> updateBusImage(UUID imageId, BusImageDTO busImageDTO) {
+        Optional<BusImage> existingBusImage = busImageRepository.findById(imageId);
+        if (existingBusImage.isPresent()) {
+            BusImage busImage = existingBusImage.get();
+            busImage.setBusId(busImageDTO.getBusId());
+            busImage.setS3BucketName(busImageDTO.getS3BucketName());
+            busImage.setS3Key(busImageDTO.getS3Key());
+            busImage.setImageUrl(busImageDTO.getImageUrl());
+            busImage.setFileName(busImageDTO.getFileName());
+            busImage.setContentType(busImageDTO.getContentType());
+            busImage.setFileSize(busImageDTO.getFileSize());
+            busImage.setIsPrimary(busImageDTO.getIsPrimary());
+            busImage.setDescription(busImageDTO.getDescription());
+            BusImage updatedBusImage = busImageRepository.save(busImage);
+            return Optional.of(busImageMapper.toDTO(updatedBusImage));
+        }
+        return Optional.empty();
+    }
+    
+    /**
+     * Delete a bus image by its ID
+     * @param imageId the ID of the bus image to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteBusImage(UUID imageId) {
+        if (busImageRepository.existsById(imageId)) {
+            busImageRepository.deleteById(imageId);
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Delete all images for a specific bus
+     * @param busId the ID of the bus
+     * @return the number of images deleted
+     */
+    public int deleteAllBusImagesByBusId(UUID busId) {
+        List<BusImage> busImages = busImageRepository.findByBusId(busId);
+        int count = busImages.size();
+        busImageRepository.deleteAll(busImages);
+        return count;
+    }
+}
+

@@ -11,12 +11,12 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "schedule")
 public class Schedule {
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "scheduleid", updatable = false, nullable = false, columnDefinition = "uuid DEFAULT uuid_generate_v4()")
     private UUID scheduleid;
     @NotNull
-    @Column(name = "date")  
+    @Column(name = "date")
     private String date;
     @NotNull
     @Column(name = "arrivaltime")
@@ -34,61 +34,71 @@ public class Schedule {
     @Column(name = "agencyid")
     private String agencyid;
     @NotNull
-    @Column(name = "fairid")
-    private UUID fairid;
+    @Column(name = "priceid")
+    private UUID priceid;
 
-    
     public UUID getScheduleid() {
         return scheduleid;
     }
+
     public void setScheduleid(UUID scheduleid) {
         this.scheduleid = scheduleid;
     }
+
     public String getDate() {
         return date;
     }
+
     public void setDate(String date) {
         this.date = date;
     }
+
     public String getArrivaltime() {
         return arrivaltime;
     }
+
     public void setArrivaltime(String arrivaltime) {
         this.arrivaltime = arrivaltime;
     }
+
     public String getDeparturetime() {
         return departuretime;
     }
+
     public void setDeparturetime(String departuretime) {
         this.departuretime = departuretime;
     }
+
     public UUID getRouteid() {
         return routeid;
     }
+
     public void setRouteid(UUID routeid) {
         this.routeid = routeid;
     }
+
     public UUID getBusid() {
         return busid;
     }
+
     public void setBusid(UUID busid) {
         this.busid = busid;
     }
+
     public String getAgencyid() {
         return agencyid;
     }
+
     public void setAgencyid(String agencyid) {
         this.agencyid = agencyid;
     }
-    public UUID getFairid() {
-        return fairid;
-    }
-    public void setFairid(UUID fairid) {
-        this.fairid = fairid;
-    }
-    
 
-    
+    public UUID getPriceid() {
+        return priceid;
+    }
 
-    
+    public void setPriceid(UUID priceid) {
+        this.priceid = priceid;
+    }
+
 }

@@ -1,7 +1,10 @@
 package com.example.agencyadmin.Repositories;
 
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.agencyadmin.Models.BusManufacturer;
+import com.example.agencyadmin.Models.BusManufacturers;
 
-public interface BusManufacturerRepository extends JpaRepository<BusManufacturer, UUID> {}
+public interface BusManufacturerRepository extends JpaRepository<BusManufacturers, UUID> {
+    Optional<BusManufacturers> findByManufacturerName(String manufacturerName);
+}

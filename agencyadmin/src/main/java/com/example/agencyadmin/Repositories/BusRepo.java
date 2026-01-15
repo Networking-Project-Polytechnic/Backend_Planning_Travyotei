@@ -6,11 +6,11 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.agencyadmin.Models.Buses;
+import com.example.agencyadmin.Models.Bus;
 
 @Repository
-public interface BusRepo extends JpaRepository<Buses, UUID> {
-    Optional<Buses> findByBusplatenumber(String busplatenumber);
-    boolean existsByBusplatenumber(String busplatenumber);
+public interface BusRepo extends JpaRepository<Bus, UUID> {
+    Optional<Bus> findByRegistrationNumber(String registrationNumber);
+    boolean existsByRegistrationNumber(String registrationNumber);
         
 }
