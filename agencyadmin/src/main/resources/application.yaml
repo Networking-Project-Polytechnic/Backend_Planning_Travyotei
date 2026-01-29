@@ -31,8 +31,3 @@ spring:
 # Key & value deserialization
 #spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
 #spring.kafka.consumer.value-deserializer=org.apache.kafka.common.serialization.StringDeserializer
-
-cloudinary:
-  cloud-name: dnr4lqejq
-  api-key: 826994845279213
-  api-secret: H0PpFIJDJj7UUt8PeAcbunasNrM
