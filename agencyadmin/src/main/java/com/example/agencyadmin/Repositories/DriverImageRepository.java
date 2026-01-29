@@ -8,8 +8,12 @@ import com.example.agencyadmin.Models.DriverImage;
 
 public interface DriverImageRepository extends JpaRepository<DriverImage, UUID> {
     List<DriverImage> findByDriverId(UUID driverId);
-    Optional<DriverImage> findByS3Key(String s3Key);
-    List<DriverImage> findByDriverIdAndIsPrimary(UUID driverId, Boolean isPrimary);
-    Optional<DriverImage> findFirstByDriverIdAndIsPrimaryTrue(UUID driverId);
-}
 
+    Optional<DriverImage> findByPublicId(String publicId);
+
+    List<DriverImage> findByDriverIdAndIsPrimary(UUID driverId, Boolean isPrimary);
+
+    Optional<DriverImage> findFirstByDriverIdAndIsPrimaryTrue(UUID driverId);
+
+    List<DriverImage> findByDriverIdIn(List<UUID> driverIds);
+}

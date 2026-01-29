@@ -21,6 +21,9 @@ public class RoutePrice {
     @NotNull
     private UUID busId;
 
+    @Column(name = "agencyid")
+    private String agencyid;
+
     @NotNull
     private Float priceAmount;
 
@@ -64,6 +67,14 @@ public class RoutePrice {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public String getAgencyid() {
+        return agencyid;
+    }
+
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
     }
 
     // getters & setters

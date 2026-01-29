@@ -14,21 +14,23 @@ import com.example.agencyadmin.Mappers.FuelTypeMapper;
  * Service class for FuelType entity.
  * This service encapsulates business logic for FuelType operations.
  * It handles interactions between the controller and repository layers.
- * All business logic related to fuel types should be implemented in this service.
+ * All business logic related to fuel types should be implemented in this
+ * service.
  */
 @Service
 public class FuelTypeService {
-    
+
     /** The FuelType repository for database operations */
     @Autowired
     private FuelTypeRepository fuelTypeRepository;
-    
+
     /** The FuelType mapper for converting between entities and DTOs */
     @Autowired
     private FuelTypeMapper fuelTypeMapper;
-    
+
     /**
      * Create a new fuel type
+     * 
      * @param fuelTypeDTO the fuel type data transfer object
      * @return the created fuel type DTO
      */
@@ -37,9 +39,10 @@ public class FuelTypeService {
         FuelType savedFuelType = fuelTypeRepository.save(fuelType);
         return fuelTypeMapper.toDTO(savedFuelType);
     }
-    
+
     /**
      * Get a fuel type by its ID
+     * 
      * @param fuelTypeId the ID of the fuel type
      * @return the fuel type DTO if found
      */
@@ -47,18 +50,25 @@ public class FuelTypeService {
         Optional<FuelType> fuelType = fuelTypeRepository.findById(fuelTypeId);
         return fuelType.map(fuelTypeMapper::toDTO);
     }
-    
+
     /**
      * Get all fuel types
+     * 
      * @return list of all fuel type DTOs
      */
     public List<FuelTypeDTO> getAllFuelTypes() {
         List<FuelType> fuelTypes = fuelTypeRepository.findAll();
         return fuelTypes.stream().map(fuelTypeMapper::toDTO).toList();
     }
-    
+
+    public List<FuelTypeDTO> getFuelTypesByAgency(String agencyId) {
+        List<FuelType> fuelTypes = fuelTypeRepository.findByAgencyid(agencyId);
+        return fuelTypes.stream().map(fuelTypeMapper::toDTO).toList();
+    }
+
     /**
      * Get a fuel type by its name
+     * 
      * @param fuelTypeName the name of the fuel type
      * @return the fuel type DTO if found
      */
@@ -66,10 +76,11 @@ public class FuelTypeService {
         Optional<FuelType> fuelType = fuelTypeRepository.findByFuelTypeName(fuelTypeName);
         return fuelType.map(fuelTypeMapper::toDTO);
     }
-    
+
     /**
      * Update an existing fuel type
-     * @param fuelTypeId the ID of the fuel type to update
+     * 
+     * @param fuelTypeId  the ID of the fuel type to update
      * @param fuelTypeDTO the updated fuel type data
      * @return the updated fuel type DTO
      */
@@ -78,14 +89,16 @@ public class FuelTypeService {
         if (existingFuelType.isPresent()) {
             FuelType fuelType = existingFuelType.get();
             fuelType.setFuelTypeName(fuelTypeDTO.getFuelTypeName());
+            fuelType.setAgencyid(fuelTypeDTO.getAgencyId());
             FuelType updatedFuelType = fuelTypeRepository.save(fuelType);
             return Optional.of(fuelTypeMapper.toDTO(updatedFuelType));
         }
         return Optional.empty();
     }
-    
+
     /**
      * Delete a fuel type by its ID
+     * 
      * @param fuelTypeId the ID of the fuel type to delete
      * @return true if deletion was successful
      */

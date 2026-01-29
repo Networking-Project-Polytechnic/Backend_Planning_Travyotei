@@ -16,148 +16,134 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity(name = "bus_image")
 public class BusImage {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "image_id", updatable = false, nullable = false, columnDefinition = "uuid DEFAULT uuid_generate_v4()")
     private UUID imageId;
-    
+
     @NotNull
     @Column(name = "bus_id", nullable = false)
     private UUID busId;
-    
+
     @NotNull
-    @Column(name = "s3_bucket_name", nullable = false)
-    private String s3BucketName;
-    
-    @NotNull
-    @Column(name = "s3_key", nullable = false, unique = true)
-    private String s3Key;
-    
+    @Column(name = "public_id", nullable = false, unique = true)
+    private String publicId;
+
     @Column(name = "image_url")
     private String imageUrl;
-    
+
     @NotNull
     @Column(name = "file_name", nullable = false)
     private String fileName;
-    
+
     @Column(name = "content_type")
     private String contentType;
-    
+
     @Column(name = "file_size")
     private Long fileSize;
-    
+
     @Column(name = "is_primary")
     private Boolean isPrimary = false;
-    
+
     @Column(name = "uploaded_at")
     private LocalDateTime uploadedAt;
-    
+
     @Column(name = "description")
     private String description;
 
     // ===== Constructors =====
-    
+
     public BusImage() {
         this.uploadedAt = LocalDateTime.now();
     }
-    
-    public BusImage(UUID busId, String s3BucketName, String s3Key, String fileName) {
+
+    public BusImage(UUID busId, String publicId, String fileName) {
         this.busId = busId;
-        this.s3BucketName = s3BucketName;
-        this.s3Key = s3Key;
+        this.publicId = publicId;
         this.fileName = fileName;
         this.uploadedAt = LocalDateTime.now();
     }
 
     // ===== Getters and Setters =====
-    
+
     public UUID getImageId() {
         return imageId;
     }
-    
+
     public void setImageId(UUID imageId) {
         this.imageId = imageId;
     }
-    
+
     public UUID getBusId() {
         return busId;
     }
-    
+
     public void setBusId(UUID busId) {
         this.busId = busId;
     }
-    
-    public String getS3BucketName() {
-        return s3BucketName;
+
+    public String getPublicId() {
+        return publicId;
     }
-    
-    public void setS3BucketName(String s3BucketName) {
-        this.s3BucketName = s3BucketName;
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
     }
-    
-    public String getS3Key() {
-        return s3Key;
-    }
-    
-    public void setS3Key(String s3Key) {
-        this.s3Key = s3Key;
-    }
-    
+
     public String getImageUrl() {
         return imageUrl;
     }
-    
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    
+
     public String getFileName() {
         return fileName;
     }
-    
+
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
-    
+
     public String getContentType() {
         return contentType;
     }
-    
+
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
-    
+
     public Long getFileSize() {
         return fileSize;
     }
-    
+
     public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
     }
-    
+
     public Boolean getIsPrimary() {
         return isPrimary;
     }
-    
+
     public void setIsPrimary(Boolean isPrimary) {
         this.isPrimary = isPrimary;
     }
-    
+
     public LocalDateTime getUploadedAt() {
         return uploadedAt;
     }
-    
+
     public void setUploadedAt(LocalDateTime uploadedAt) {
         this.uploadedAt = uploadedAt;
     }
-    
+
     public String getDescription() {
         return description;
     }
-    
+
     public void setDescription(String description) {
         this.description = description;
     }
 }
-

@@ -8,5 +8,8 @@ import com.example.agencyadmin.Models.BusModels;
 
 public interface BusModelRepository extends JpaRepository<BusModels, UUID> {
     Optional<BusModels> findByModelName(String modelName);
+
     List<BusModels> findByModelNameContaining(String modelName);
+
+    List<BusModels> findByAgencyid(String agencyid);
 }

@@ -39,3 +39,47 @@ databaseChangeLog:
             path: refactor_route_fair.sql
             relativeToChangelogFile: true
             splitStatements: false
+
+  - changeSet:
+      id: add-agency-id-to-driver-v1
+      author: antigravity
+      changes:
+        - sqlFile:
+            path: add_agency_id_to_driver.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+
+  - changeSet:
+      id: add-driver-id-to-schedule-v1
+      author: antigravity
+      changes:
+        - sqlFile:
+            path: add_driver_id_to_schedule.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+
+  - changeSet:
+      id: migrate-to-cloudinary-v1
+      author: antigravity
+      changes:
+        - sqlFile:
+            path: migrate_to_cloudinary.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+  - changeSet:
+      id: add-description-to-driver-v1
+      author: antigravity
+      changes:
+        - sqlFile:
+            path: add_description_to_driver.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+
+  - changeSet:
+      id: repopulate-v3
+      author: antigravity
+      changes:
+        - sqlFile:
+            path: repopulate_v3.sql
+            relativeToChangelogFile: true
+            splitStatements: false

@@ -1,12 +1,10 @@
 package com.example.agencyadmin.Models;
 
-
 import java.util.UUID;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-
 
 @Entity(name = "bus_model")
 public class BusModels {
@@ -17,6 +15,9 @@ public class BusModels {
 
     @Column(name = "model_name", nullable = false)
     private String modelName;
+
+    @Column(name = "agencyid")
+    private String agencyid;
 
     public UUID getBusModelId() {
         return busModelId;
@@ -34,5 +35,11 @@ public class BusModels {
         this.modelName = modelName;
     }
 
-  
+    public String getAgencyid() {
+        return agencyid;
+    }
+
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
+    }
 }

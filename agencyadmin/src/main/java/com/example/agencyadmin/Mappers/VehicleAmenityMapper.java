@@ -15,6 +15,7 @@ public class VehicleAmenityMapper {
         dto.setAmenityId(amenity.getAmenityId());
         dto.setAmenityName(amenity.getAmenityName());
         dto.setDescription(amenity.getDescription());
+        dto.setAgencyId(amenity.getAgencyid());
         return dto;
     }
 
@@ -26,6 +27,7 @@ public class VehicleAmenityMapper {
         amenity.setAmenityId(dto.getAmenityId());
         amenity.setAmenityName(dto.getAmenityName());
         amenity.setDescription(dto.getDescription());
+        amenity.setAgencyid(dto.getAgencyId());
         return amenity;
     }
 }

@@ -17,10 +17,13 @@ public class BusCanTransport {
     private UUID transportId;
 
     @NotNull
-    @Column(name = "item_name", unique = true)
+    @Column(name = "item_name")
     private String itemName;
 
     private String description;
+
+    @Column(name = "agencyid")
+    private String agencyid;
 
     public UUID getTransportId() {
         return transportId;
@@ -44,5 +47,13 @@ public class BusCanTransport {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getAgencyid() {
+        return agencyid;
+    }
+
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
     }
 }

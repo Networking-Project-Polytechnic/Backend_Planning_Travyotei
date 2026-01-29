@@ -6,5 +6,8 @@ import com.example.agencyadmin.Models.Driver;
 
 public interface DriverRepository extends JpaRepository<Driver, UUID> {
     Driver findByLicenseNumber(String licenseNumber);
+
     Driver findByFullName(String fullName);
+
+    java.util.List<Driver> findByAgencyid(String agencyid);
 }

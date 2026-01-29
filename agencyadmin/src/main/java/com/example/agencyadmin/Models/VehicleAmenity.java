@@ -17,10 +17,13 @@ public class VehicleAmenity {
     private UUID amenityId;
 
     @NotNull
-    @Column(name = "amenity_name", unique = true)
+    @Column(name = "amenity_name")
     private String amenityName;
 
     private String description;
+
+    @Column(name = "agencyid")
+    private String agencyid;
 
     public UUID getAmenityId() {
         return amenityId;
@@ -44,5 +47,13 @@ public class VehicleAmenity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getAgencyid() {
+        return agencyid;
+    }
+
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
     }
 }

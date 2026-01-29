@@ -8,19 +8,42 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+
 @Entity(name = "fuel_type")
 public class FuelType {
-@Id
-@GeneratedValue(strategy = GenerationType.AUTO)
-@Column(name = "fuel_type_id", updatable = false, nullable = false, columnDefinition = "uuid DEFAULT uuid_generate_v4()")
-private UUID fuelTypeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "fuel_type_id", updatable = false, nullable = false, columnDefinition = "uuid DEFAULT uuid_generate_v4()")
+    private UUID fuelTypeId;
 
-@NotNull
-@Column(name = "fuel_type_name", unique = true)
-private String fuelTypeName;
+    @NotNull
+    @Column(name = "fuel_type_name")
+    private String fuelTypeName;
 
-public UUID getFuelTypeId() { return fuelTypeId; }
-public void setFuelTypeId(UUID fuelTypeId) { this.fuelTypeId = fuelTypeId; }
-public String getFuelTypeName() { return fuelTypeName; }
-public void setFuelTypeName(String fuelTypeName) { this.fuelTypeName = fuelTypeName; }
+    @Column(name = "agencyid")
+    private String agencyid;
+
+    public UUID getFuelTypeId() {
+        return fuelTypeId;
+    }
+
+    public void setFuelTypeId(UUID fuelTypeId) {
+        this.fuelTypeId = fuelTypeId;
+    }
+
+    public String getFuelTypeName() {
+        return fuelTypeName;
+    }
+
+    public void setFuelTypeName(String fuelTypeName) {
+        this.fuelTypeName = fuelTypeName;
+    }
+
+    public String getAgencyid() {
+        return agencyid;
+    }
+
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
+    }
 }

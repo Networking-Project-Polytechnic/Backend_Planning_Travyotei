@@ -14,32 +14,39 @@ import com.example.agencyadmin.Mappers.DriverImageMapper;
  * Service class for DriverImage entity.
  * This service encapsulates business logic for DriverImage operations.
  * It handles interactions between the controller and repository layers.
- * All business logic related to driver images should be implemented in this service.
+ * All business logic related to driver images should be implemented in this
+ * service.
  */
 @Service
 public class DriverImageService {
-    
+
     /** The DriverImage repository for database operations */
     @Autowired
     private DriverImageRepository driverImageRepository;
-    
+
     /** The DriverImage mapper for converting between entities and DTOs */
     @Autowired
     private DriverImageMapper driverImageMapper;
-    
+
     /**
-     * Create a new driver image
-     * @param driverImageDTO the driver image data transfer object
+     * Create a new driver image record (metadata only).
+     * 
+     * @param driverImageDTO the driver image DTO containing Cloudinary metadata
      * @return the created driver image DTO
      */
     public DriverImageDTO createDriverImage(DriverImageDTO driverImageDTO) {
         DriverImage driverImage = driverImageMapper.toEntity(driverImageDTO);
+        // Ensure uploadedAt is set if missing
+        if (driverImage.getUploadedAt() == null) {
+            driverImage.setUploadedAt(java.time.LocalDateTime.now());
+        }
         DriverImage savedDriverImage = driverImageRepository.save(driverImage);
         return driverImageMapper.toDTO(savedDriverImage);
     }
-    
+
     /**
      * Get a driver image by its ID
+     * 
      * @param imageId the ID of the driver image
      * @return the driver image DTO if found
      */
@@ -47,18 +54,20 @@ public class DriverImageService {
         Optional<DriverImage> driverImage = driverImageRepository.findById(imageId);
         return driverImage.map(driverImageMapper::toDTO);
     }
-    
+
     /**
      * Get all driver images
+     * 
      * @return list of all driver image DTOs
      */
     public List<DriverImageDTO> getAllDriverImages() {
         List<DriverImage> driverImages = driverImageRepository.findAll();
         return driverImages.stream().map(driverImageMapper::toDTO).toList();
     }
-    
+
     /**
      * Get all images for a specific driver
+     * 
      * @param driverId the ID of the driver
      * @return list of driver image DTOs for the driver
      */
@@ -66,19 +75,31 @@ public class DriverImageService {
         List<DriverImage> driverImages = driverImageRepository.findByDriverId(driverId);
         return driverImages.stream().map(driverImageMapper::toDTO).toList();
     }
-    
+
+    public List<DriverImageDTO> getDriverImagesByDriverIds(List<UUID> driverIds) {
+        return driverImageRepository.findByDriverIdIn(driverIds).stream()
+                .map(driverImageMapper::toDTO)
+                .toList();
+    }
+
+    /** The Cloudinary Service for image operations */
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
     /**
-     * Get a driver image by its S3 key
-     * @param s3Key the S3 key of the image
+     * Get a driver image by its Public ID
+     * 
+     * @param publicId the Public ID of the image
      * @return the driver image DTO if found
      */
-    public Optional<DriverImageDTO> getDriverImageByS3Key(String s3Key) {
-        Optional<DriverImage> driverImage = driverImageRepository.findByS3Key(s3Key);
+    public Optional<DriverImageDTO> getDriverImageByPublicId(String publicId) {
+        Optional<DriverImage> driverImage = driverImageRepository.findByPublicId(publicId);
         return driverImage.map(driverImageMapper::toDTO);
     }
-    
+
     /**
      * Get the primary image for a driver
+     * 
      * @param driverId the ID of the driver
      * @return the primary driver image DTO if found
      */
@@ -86,10 +107,11 @@ public class DriverImageService {
         Optional<DriverImage> driverImage = driverImageRepository.findFirstByDriverIdAndIsPrimaryTrue(driverId);
         return driverImage.map(driverImageMapper::toDTO);
     }
-    
+
     /**
      * Get all primary or non-primary images for a driver
-     * @param driverId the ID of the driver
+     * 
+     * @param driverId  the ID of the driver
      * @param isPrimary whether to get primary or non-primary images
      * @return list of driver image DTOs
      */
@@ -97,10 +119,11 @@ public class DriverImageService {
         List<DriverImage> driverImages = driverImageRepository.findByDriverIdAndIsPrimary(driverId, isPrimary);
         return driverImages.stream().map(driverImageMapper::toDTO).toList();
     }
-    
+
     /**
      * Update an existing driver image
-     * @param imageId the ID of the driver image to update
+     * 
+     * @param imageId        the ID of the driver image to update
      * @param driverImageDTO the updated driver image data
      * @return the updated driver image DTO
      */
@@ -109,8 +132,7 @@ public class DriverImageService {
         if (existingDriverImage.isPresent()) {
             DriverImage driverImage = existingDriverImage.get();
             driverImage.setDriverId(driverImageDTO.getDriverId());
-            driverImage.setS3BucketName(driverImageDTO.getS3BucketName());
-            driverImage.setS3Key(driverImageDTO.getS3Key());
+            driverImage.setPublicId(driverImageDTO.getPublicId());
             driverImage.setImageUrl(driverImageDTO.getImageUrl());
             driverImage.setFileName(driverImageDTO.getFileName());
             driverImage.setContentType(driverImageDTO.getContentType());
@@ -122,9 +144,10 @@ public class DriverImageService {
         }
         return Optional.empty();
     }
-    
+
     /**
      * Delete a driver image by its ID
+     * 
      * @param imageId the ID of the driver image to delete
      * @return true if deletion was successful
      */
@@ -135,9 +158,10 @@ public class DriverImageService {
         }
         return false;
     }
-    
+
     /**
      * Delete all images for a specific driver
+     * 
      * @param driverId the ID of the driver
      * @return the number of images deleted
      */
@@ -148,4 +172,3 @@ public class DriverImageService {
         return count;
     }
 }
-

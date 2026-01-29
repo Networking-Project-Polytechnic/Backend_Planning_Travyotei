@@ -20,26 +20,30 @@ import com.example.agencyadmin.Services.BusMakeService;
 @RequestMapping("/api/v1/bus-makes")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class BusMakeController {
-    
+
     /** The BusMake service for business logic */
     @Autowired
     private BusMakeService busMakeService;
-    
+
     /**
      * Create a new bus make
+     * 
      * @param busMakeDTO the bus make data transfer object
-     * @return ResponseEntity with the created bus make DTO and HTTP 201 Created status
+     * @return ResponseEntity with the created bus make DTO and HTTP 201 Created
+     *         status
      */
     @PostMapping
     public ResponseEntity<BusMakeDTO> createBusMake(@RequestBody BusMakeDTO busMakeDTO) {
         BusMakeDTO createdBusMake = busMakeService.createBusMake(busMakeDTO);
         return new ResponseEntity<>(createdBusMake, HttpStatus.CREATED);
     }
-    
+
     /**
      * Get a bus make by its ID
+     * 
      * @param busMakeId the ID of the bus make
-     * @return ResponseEntity with the bus make DTO if found, otherwise 404 Not Found
+     * @return ResponseEntity with the bus make DTO if found, otherwise 404 Not
+     *         Found
      */
     @GetMapping("/{busMakeId}")
     public ResponseEntity<BusMakeDTO> getBusMakeById(@PathVariable UUID busMakeId) {
@@ -47,9 +51,10 @@ public class BusMakeController {
                 .map(make -> new ResponseEntity<>(make, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Get all bus makes
+     * 
      * @return ResponseEntity with list of all bus make DTOs and HTTP 200 OK status
      */
     @GetMapping
@@ -57,11 +62,25 @@ public class BusMakeController {
         List<BusMakeDTO> busMakes = busMakeService.getAllBusMakes();
         return new ResponseEntity<>(busMakes, HttpStatus.OK);
     }
-    
+
+    /**
+     * Get all bus makes for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @return ResponseEntity with list of bus make DTOs for the agency
+     */
+    @GetMapping("/agency/{agencyId}")
+    public ResponseEntity<List<BusMakeDTO>> getBusMakesByAgency(@PathVariable String agencyId) {
+        List<BusMakeDTO> busMakes = busMakeService.getBusMakesByAgency(agencyId);
+        return new ResponseEntity<>(busMakes, HttpStatus.OK);
+    }
+
     /**
      * Get a bus make by its name
+     * 
      * @param makeName the name of the bus make
-     * @return ResponseEntity with the bus make DTO if found, otherwise 404 Not Found
+     * @return ResponseEntity with the bus make DTO if found, otherwise 404 Not
+     *         Found
      */
     @GetMapping("/name/{makeName}")
     public ResponseEntity<BusMakeDTO> getBusMakeByName(@PathVariable String makeName) {
@@ -69,12 +88,14 @@ public class BusMakeController {
                 .map(make -> new ResponseEntity<>(make, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Update an existing bus make
-     * @param busMakeId the ID of the bus make to update
+     * 
+     * @param busMakeId  the ID of the bus make to update
      * @param busMakeDTO the updated bus make data
-     * @return ResponseEntity with the updated bus make DTO if successful, otherwise 404 Not Found
+     * @return ResponseEntity with the updated bus make DTO if successful, otherwise
+     *         404 Not Found
      */
     @PutMapping("/{busMakeId}")
     public ResponseEntity<BusMakeDTO> updateBusMake(@PathVariable UUID busMakeId, @RequestBody BusMakeDTO busMakeDTO) {
@@ -82,11 +103,13 @@ public class BusMakeController {
                 .map(make -> new ResponseEntity<>(make, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Delete a bus make by its ID
+     * 
      * @param busMakeId the ID of the bus make to delete
-     * @return ResponseEntity with HTTP 204 No Content if successful, otherwise 404 Not Found
+     * @return ResponseEntity with HTTP 204 No Content if successful, otherwise 404
+     *         Not Found
      */
     @DeleteMapping("/{busMakeId}")
     public ResponseEntity<Void> deleteBusMake(@PathVariable UUID busMakeId) {
@@ -96,4 +119,3 @@ public class BusMakeController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
-

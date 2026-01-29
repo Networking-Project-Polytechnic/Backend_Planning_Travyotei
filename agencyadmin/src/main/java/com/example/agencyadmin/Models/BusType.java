@@ -17,8 +17,11 @@ public class BusType {
     private UUID busTypeId;
 
     @NotNull
-    @Column(name = "bus_type_name", unique = true)
+    @Column(name = "bus_type_name")
     private String busTypeName;
+
+    @Column(name = "agencyid")
+    private String agencyid;
 
     public UUID getBusTypeId() {
         return busTypeId;
@@ -34,5 +37,13 @@ public class BusType {
 
     public void setBusTypeName(String busTypeName) {
         this.busTypeName = busTypeName;
+    }
+
+    public String getAgencyid() {
+        return agencyid;
+    }
+
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
     }
 }

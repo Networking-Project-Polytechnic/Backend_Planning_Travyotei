@@ -6,14 +6,16 @@ import org.springframework.stereotype.Component;
 
 /**
  * Mapper class for converting between FuelType entity and FuelTypeDTO.
- * This mapper is responsible for converting FuelType JPA entities to DTOs and vice versa.
+ * This mapper is responsible for converting FuelType JPA entities to DTOs and
+ * vice versa.
  * It is used to decouple the database layer from the API layer.
  */
 @Component
 public class FuelTypeMapper {
-    
+
     /**
      * Converts a FuelType entity to FuelTypeDTO
+     * 
      * @param fuelType the FuelType entity
      * @return FuelTypeDTO containing the data from the FuelType entity
      */
@@ -22,13 +24,14 @@ public class FuelTypeMapper {
             return null;
         }
         return new FuelTypeDTO(
-            fuelType.getFuelTypeId(),
-            fuelType.getFuelTypeName()
-        );
+                fuelType.getFuelTypeId(),
+                fuelType.getFuelTypeName(),
+                fuelType.getAgencyid());
     }
-    
+
     /**
      * Converts a FuelTypeDTO to FuelType entity
+     * 
      * @param fuelTypeDTO the FuelTypeDTO
      * @return FuelType entity containing the data from the DTO
      */
@@ -38,6 +41,7 @@ public class FuelTypeMapper {
         }
         FuelType fuelType = new FuelType();
         fuelType.setFuelTypeName(fuelTypeDTO.getFuelTypeName());
+        fuelType.setAgencyid(fuelTypeDTO.getAgencyId());
         return fuelType;
     }
 }

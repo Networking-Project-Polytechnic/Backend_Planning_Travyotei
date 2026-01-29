@@ -40,6 +40,21 @@ public class BusService {
     @Autowired
     private BusReviewMapper reviewMapper;
 
+    @Autowired
+    private com.example.agencyadmin.Repositories.BusImageRepository busImageRepository;
+
+    @Autowired
+    private com.example.agencyadmin.Repositories.BusReviewRepository busReviewRepository;
+
+    @Autowired
+    private com.example.agencyadmin.Repositories.RoutePriceRepository routePriceRepository;
+
+    @Autowired
+    private com.example.agencyadmin.Repositories.ScheduleRepository scheduleRepository;
+
+    @Autowired
+    private com.example.agencyadmin.Repositories.AssignmentsRepository assignmentsRepository;
+
     /**
      * Create a new bus
      * 
@@ -141,8 +156,28 @@ public class BusService {
      * @param busId the ID of the bus to delete
      * @return true if deletion was successful
      */
+    @org.springframework.transaction.annotation.Transactional
     public boolean deleteBus(UUID busId) {
         if (busRepository.existsById(busId)) {
+            // 1. Delete Bus Images
+            busImageRepository.deleteByBusId(busId);
+
+            // 2. Delete Bus Reviews
+            busReviewRepository.deleteByBusBusId(busId);
+
+            // 3. Find all schedules for this bus to delete their assignments first
+            List<com.example.agencyadmin.Models.Schedule> schedules = scheduleRepository.findByBusid(busId);
+            for (com.example.agencyadmin.Models.Schedule schedule : schedules) {
+                assignmentsRepository.deleteByScheduleId(schedule.getScheduleid());
+            }
+
+            // 4. Delete Schedules
+            scheduleRepository.deleteByBusid(busId);
+
+            // 5. Delete Route Prices associated with this bus
+            routePriceRepository.deleteByBusId(busId);
+
+            // 6. Finally delete the bus
             busRepository.deleteById(busId);
             return true;
         }

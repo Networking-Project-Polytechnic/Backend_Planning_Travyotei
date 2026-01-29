@@ -7,4 +7,6 @@ import com.example.agencyadmin.Models.BusMakes;
 
 public interface BusMakeRepository extends JpaRepository<BusMakes, UUID> {
     Optional<BusMakes> findByMakeName(String makeName);
+
+    java.util.List<BusMakes> findByAgencyid(String agencyid);
 }

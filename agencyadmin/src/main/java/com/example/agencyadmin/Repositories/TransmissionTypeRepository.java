@@ -7,4 +7,6 @@ import com.example.agencyadmin.Models.TransmissionType;
 
 public interface TransmissionTypeRepository extends JpaRepository<TransmissionType, UUID> {
     Optional<TransmissionType> findByTypeName(String typeName);
+
+    java.util.List<TransmissionType> findByAgencyid(String agencyid);
 }

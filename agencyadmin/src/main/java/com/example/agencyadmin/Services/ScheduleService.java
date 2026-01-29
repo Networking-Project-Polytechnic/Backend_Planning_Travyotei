@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.agencyadmin.DTOs.ScheduleDTO;
+import com.example.agencyadmin.DTOs.ScheduleDetailsDTO;
 import com.example.agencyadmin.Models.Schedule;
 import com.example.agencyadmin.Repositories.ScheduleRepository;
 import com.example.agencyadmin.Mappers.ScheduleMapper;
@@ -27,6 +28,83 @@ public class ScheduleService {
     /** The Schedule mapper for converting between entities and DTOs */
     @Autowired
     private ScheduleMapper scheduleMapper;
+
+    @Autowired
+    private BusService busService;
+    @Autowired
+    private DriverService driverService;
+    @Autowired
+    private RouteService routeService;
+    @Autowired
+    private LocationService locationService;
+    @Autowired
+    private RoutePriceService routePriceService;
+    @Autowired
+    private BusImageService busImageService;
+    @Autowired
+    private BusReviewService busReviewService;
+    @Autowired
+    private DriverImageService driverImageService;
+    @Autowired
+    private BusTypeService busTypeService;
+    @Autowired
+    private BusMakeService busMakeService;
+    @Autowired
+    private BusModelService busModelService;
+
+    /**
+     * Get comprehensive details for a specific schedule
+     * 
+     * @param scheduleId the ID of the schedule
+     * @return detailed schedule DTO if found
+     */
+    public Optional<ScheduleDetailsDTO> getScheduleDetails(UUID scheduleId) {
+        return scheduleRepository.findById(scheduleId).map(schedule -> {
+            ScheduleDetailsDTO details = new ScheduleDetailsDTO();
+            details.setScheduleid(schedule.getScheduleid());
+            details.setDate(schedule.getDate());
+            details.setArrivaltime(schedule.getArrivaltime());
+            details.setDeparturetime(schedule.getDeparturetime());
+            details.setAgencyid(schedule.getAgencyid());
+
+            // 1. Fetch Bus Details
+            busService.getBusById(schedule.getBusid()).ifPresent(bus -> {
+                details.setBus(bus);
+                details.setBusImages(busImageService.getBusImagesByBusIds(List.of(bus.getBusId())));
+                details.setBusReviews(busReviewService.getBusReviewsByBusIds(List.of(bus.getBusId())));
+
+                // Reference data names
+                busTypeService.getBusTypeById(bus.getBusTypeId())
+                        .ifPresent(t -> details.setBusTypeName(t.getBusTypeName()));
+                busMakeService.getBusMakeById(bus.getBusMakeId())
+                        .ifPresent(m -> details.setBusMakeName(m.getMakeName()));
+                busModelService.getBusModelById(bus.getBusModelId())
+                        .ifPresent(m -> details.setBusModelName(m.getModelName()));
+            });
+
+            // 2. Fetch Route Details
+            routeService.getRouteById(schedule.getRouteid()).ifPresent(route -> {
+                details.setRoute(route);
+                details.setStopPoints(route.getStopPoints());
+                locationService.getLocationById(route.getStartlocationid()).ifPresent(details::setStartLocation);
+                locationService.getLocationById(route.getEndlocationid()).ifPresent(details::setEndLocation);
+            });
+
+            // 3. Fetch Price Details
+            routePriceService.getRoutePriceById(schedule.getPriceid()).ifPresent(details::setPrice);
+
+            // 4. Fetch Driver Details
+            if (schedule.getDriverid() != null) {
+                driverService.getDriverById(schedule.getDriverid()).ifPresent(driver -> {
+                    details.setDriver(driver);
+                    details.setDriverImages(
+                            driverImageService.getDriverImagesByDriverIds(List.of(driver.getDriverId())));
+                });
+            }
+
+            return details;
+        });
+    }
 
     /**
      * Create a new schedule
@@ -106,6 +184,26 @@ public class ScheduleService {
     }
 
     /**
+     * Get schedules for an agency with optional date and departure time filters
+     * 
+     * @param agencyId      the ID of the agency
+     * @param date          optional date filter
+     * @param departureTime optional departure time filter
+     * @return list of matching schedule DTOs
+     */
+    public List<ScheduleDTO> getSchedulesByFilters(String agencyId, String date, String departureTime) {
+        List<Schedule> schedules;
+        if (date != null && departureTime != null) {
+            schedules = scheduleRepository.findByAgencyidAndDateAndDeparturetime(agencyId, date, departureTime);
+        } else if (date != null) {
+            schedules = scheduleRepository.findByAgencyidAndDate(agencyId, date);
+        } else {
+            schedules = scheduleRepository.findByAgencyid(agencyId);
+        }
+        return schedules.stream().map(scheduleMapper::toDTO).toList();
+    }
+
+    /**
      * Update an existing schedule
      * 
      * @param scheduleId  the ID of the schedule to update
@@ -123,6 +221,7 @@ public class ScheduleService {
             schedule.setBusid(scheduleDTO.getBusid());
             schedule.setAgencyid(scheduleDTO.getAgencyid());
             schedule.setPriceid(scheduleDTO.getPriceid());
+            schedule.setDriverid(scheduleDTO.getDriverid());
             Schedule updatedSchedule = scheduleRepository.save(schedule);
             return Optional.of(scheduleMapper.toDTO(updatedSchedule));
         }

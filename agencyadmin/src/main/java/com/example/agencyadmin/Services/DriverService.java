@@ -18,17 +18,18 @@ import com.example.agencyadmin.Mappers.DriverMapper;
  */
 @Service
 public class DriverService {
-    
+
     /** The Driver repository for database operations */
     @Autowired
     private DriverRepository driverRepository;
-    
+
     /** The Driver mapper for converting between entities and DTOs */
     @Autowired
     private DriverMapper driverMapper;
-    
+
     /**
      * Create a new driver
+     * 
      * @param driverDTO the driver data transfer object
      * @return the created driver DTO
      */
@@ -37,9 +38,10 @@ public class DriverService {
         Driver savedDriver = driverRepository.save(driver);
         return driverMapper.toDTO(savedDriver);
     }
-    
+
     /**
      * Get a driver by its ID
+     * 
      * @param driverId the ID of the driver
      * @return the driver DTO if found
      */
@@ -47,18 +49,31 @@ public class DriverService {
         Optional<Driver> driver = driverRepository.findById(driverId);
         return driver.map(driverMapper::toDTO);
     }
-    
+
     /**
      * Get all drivers
+     * 
      * @return list of all driver DTOs
      */
     public List<DriverDTO> getAllDrivers() {
         List<Driver> drivers = driverRepository.findAll();
         return drivers.stream().map(driverMapper::toDTO).toList();
     }
-    
+
+    /**
+     * Get all drivers for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @return list of driver DTOs for the agency
+     */
+    public List<DriverDTO> getDriversByAgency(String agencyId) {
+        List<Driver> drivers = driverRepository.findByAgencyid(agencyId);
+        return drivers.stream().map(driverMapper::toDTO).toList();
+    }
+
     /**
      * Get a driver by their license number
+     * 
      * @param licenseNumber the license number
      * @return the driver DTO if found
      */
@@ -69,9 +84,10 @@ public class DriverService {
         }
         return Optional.of(driverMapper.toDTO(driver));
     }
-    
+
     /**
      * Get a driver by their full name
+     * 
      * @param fullName the full name of the driver
      * @return the driver DTO if found
      */
@@ -82,10 +98,11 @@ public class DriverService {
         }
         return Optional.of(driverMapper.toDTO(driver));
     }
-    
+
     /**
      * Update an existing driver
-     * @param driverId the ID of the driver to update
+     * 
+     * @param driverId  the ID of the driver to update
      * @param driverDTO the updated driver data
      * @return the updated driver DTO
      */
@@ -96,14 +113,17 @@ public class DriverService {
             driver.setFullName(driverDTO.getFullName());
             driver.setPhone(driverDTO.getPhone());
             driver.setLicenseNumber(driverDTO.getLicenseNumber());
+            driver.setAgencyid(driverDTO.getAgencyid());
+            driver.setDescription(driverDTO.getDescription());
             Driver updatedDriver = driverRepository.save(driver);
             return Optional.of(driverMapper.toDTO(updatedDriver));
         }
         return Optional.empty();
     }
-    
+
     /**
      * Delete a driver by its ID
+     * 
      * @param driverId the ID of the driver to delete
      * @return true if deletion was successful
      */

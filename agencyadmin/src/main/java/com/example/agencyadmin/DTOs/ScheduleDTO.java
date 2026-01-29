@@ -35,6 +35,9 @@ public class ScheduleDTO {
     /** The route price ID associated with this schedule */
     private UUID priceid;
 
+    /** The driver ID assigned to this schedule */
+    private UUID driverid;
+
     // ===== Constructors =====
 
     /**
@@ -47,7 +50,7 @@ public class ScheduleDTO {
      * Constructor with all fields
      */
     public ScheduleDTO(UUID scheduleid, String date, String arrivaltime, String departuretime,
-            UUID routeid, UUID busid, String agencyid, UUID priceid) {
+            UUID routeid, UUID busid, String agencyid, UUID priceid, UUID driverid) {
         this.scheduleid = scheduleid;
         this.date = date;
         this.arrivaltime = arrivaltime;
@@ -56,6 +59,7 @@ public class ScheduleDTO {
         this.busid = busid;
         this.agencyid = agencyid;
         this.priceid = priceid;
+        this.driverid = driverid;
     }
 
     // ===== Getters and Setters =====
@@ -122,5 +126,13 @@ public class ScheduleDTO {
 
     public void setPriceid(UUID priceid) {
         this.priceid = priceid;
+    }
+
+    public UUID getDriverid() {
+        return driverid;
+    }
+
+    public void setDriverid(UUID driverid) {
+        this.driverid = driverid;
     }
 }

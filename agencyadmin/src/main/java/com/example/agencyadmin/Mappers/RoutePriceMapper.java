@@ -21,6 +21,7 @@ public class RoutePriceMapper {
                 routePrice.getPriceId(),
                 routePrice.getRouteId(),
                 routePrice.getBusId(),
+                routePrice.getAgencyid(),
                 routePrice.getPriceAmount(),
                 routePrice.getCurrency());
     }
@@ -38,6 +39,7 @@ public class RoutePriceMapper {
         RoutePrice routePrice = new RoutePrice();
         routePrice.setRouteId(routePriceDTO.getRouteId());
         routePrice.setBusId(routePriceDTO.getBusId());
+        routePrice.setAgencyid(routePriceDTO.getAgencyid());
         routePrice.setPriceAmount(routePriceDTO.getPriceAmount());
         routePrice.setCurrency(routePriceDTO.getCurrency());
         return routePrice;

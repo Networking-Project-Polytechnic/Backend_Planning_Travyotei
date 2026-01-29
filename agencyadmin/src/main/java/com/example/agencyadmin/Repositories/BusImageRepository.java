@@ -8,8 +8,14 @@ import com.example.agencyadmin.Models.BusImage;
 
 public interface BusImageRepository extends JpaRepository<BusImage, UUID> {
     List<BusImage> findByBusId(UUID busId);
-    Optional<BusImage> findByS3Key(String s3Key);
-    List<BusImage> findByBusIdAndIsPrimary(UUID busId, Boolean isPrimary);
-    Optional<BusImage> findFirstByBusIdAndIsPrimaryTrue(UUID busId);
-}
 
+    Optional<BusImage> findByPublicId(String publicId);
+
+    List<BusImage> findByBusIdAndIsPrimary(UUID busId, Boolean isPrimary);
+
+    Optional<BusImage> findFirstByBusIdAndIsPrimaryTrue(UUID busId);
+
+    List<BusImage> findByBusIdIn(List<UUID> busIds);
+
+    void deleteByBusId(UUID busId);
+}

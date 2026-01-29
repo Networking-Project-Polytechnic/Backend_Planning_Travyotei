@@ -6,14 +6,16 @@ import org.springframework.stereotype.Component;
 
 /**
  * Mapper class for converting between BusMakes entity and BusMakeDTO.
- * This mapper is responsible for converting BusMakes JPA entities to DTOs and vice versa.
+ * This mapper is responsible for converting BusMakes JPA entities to DTOs and
+ * vice versa.
  * It is used to decouple the database layer from the API layer.
  */
 @Component
 public class BusMakeMapper {
-    
+
     /**
      * Converts a BusMakes entity to BusMakeDTO
+     * 
      * @param busMake the BusMakes entity
      * @return BusMakeDTO containing the data from the BusMakes entity
      */
@@ -22,13 +24,14 @@ public class BusMakeMapper {
             return null;
         }
         return new BusMakeDTO(
-            busMake.getBusMakeId(),
-            busMake.getMakeName()
-        );
+                busMake.getBusMakeId(),
+                busMake.getMakeName(),
+                busMake.getAgencyid());
     }
-    
+
     /**
      * Converts a BusMakeDTO to BusMakes entity
+     * 
      * @param busMakeDTO the BusMakeDTO
      * @return BusMakes entity containing the data from the DTO
      */
@@ -38,7 +41,7 @@ public class BusMakeMapper {
         }
         BusMakes busMake = new BusMakes();
         busMake.setMakeName(busMakeDTO.getMakeName());
+        busMake.setAgencyid(busMakeDTO.getAgencyId());
         return busMake;
     }
 }
-

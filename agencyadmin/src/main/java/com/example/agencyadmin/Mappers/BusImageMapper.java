@@ -6,14 +6,16 @@ import org.springframework.stereotype.Component;
 
 /**
  * Mapper class for converting between BusImage entity and BusImageDTO.
- * This mapper is responsible for converting BusImage JPA entities to DTOs and vice versa.
+ * This mapper is responsible for converting BusImage JPA entities to DTOs and
+ * vice versa.
  * It is used to decouple the database layer from the API layer.
  */
 @Component
 public class BusImageMapper {
-    
+
     /**
      * Converts a BusImage entity to BusImageDTO
+     * 
      * @param busImage the BusImage entity
      * @return BusImageDTO containing the data from the BusImage entity
      */
@@ -22,22 +24,21 @@ public class BusImageMapper {
             return null;
         }
         return new BusImageDTO(
-            busImage.getImageId(),
-            busImage.getBusId(),
-            busImage.getS3BucketName(),
-            busImage.getS3Key(),
-            busImage.getImageUrl(),
-            busImage.getFileName(),
-            busImage.getContentType(),
-            busImage.getFileSize(),
-            busImage.getIsPrimary(),
-            busImage.getUploadedAt(),
-            busImage.getDescription()
-        );
+                busImage.getImageId(),
+                busImage.getBusId(),
+                busImage.getPublicId(),
+                busImage.getImageUrl(),
+                busImage.getFileName(),
+                busImage.getContentType(),
+                busImage.getFileSize(),
+                busImage.getIsPrimary(),
+                busImage.getUploadedAt(),
+                busImage.getDescription());
     }
-    
+
     /**
      * Converts a BusImageDTO to BusImage entity
+     * 
      * @param busImageDTO the BusImageDTO
      * @return BusImage entity containing the data from the DTO
      */
@@ -47,8 +48,7 @@ public class BusImageMapper {
         }
         BusImage busImage = new BusImage();
         busImage.setBusId(busImageDTO.getBusId());
-        busImage.setS3BucketName(busImageDTO.getS3BucketName());
-        busImage.setS3Key(busImageDTO.getS3Key());
+        busImage.setPublicId(busImageDTO.getPublicId());
         busImage.setImageUrl(busImageDTO.getImageUrl());
         busImage.setFileName(busImageDTO.getFileName());
         busImage.setContentType(busImageDTO.getContentType());
@@ -58,4 +58,3 @@ public class BusImageMapper {
         return busImage;
     }
 }
-

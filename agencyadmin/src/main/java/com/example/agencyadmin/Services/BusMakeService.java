@@ -14,21 +14,23 @@ import com.example.agencyadmin.Mappers.BusMakeMapper;
  * Service class for BusMakes entity.
  * This service encapsulates business logic for BusMakes operations.
  * It handles interactions between the controller and repository layers.
- * All business logic related to bus makes should be implemented in this service.
+ * All business logic related to bus makes should be implemented in this
+ * service.
  */
 @Service
 public class BusMakeService {
-    
+
     /** The BusMakes repository for database operations */
     @Autowired
     private BusMakeRepository busMakeRepository;
-    
+
     /** The BusMake mapper for converting between entities and DTOs */
     @Autowired
     private BusMakeMapper busMakeMapper;
-    
+
     /**
      * Create a new bus make
+     * 
      * @param busMakeDTO the bus make data transfer object
      * @return the created bus make DTO
      */
@@ -37,9 +39,10 @@ public class BusMakeService {
         BusMakes savedBusMake = busMakeRepository.save(busMake);
         return busMakeMapper.toDTO(savedBusMake);
     }
-    
+
     /**
      * Get a bus make by its ID
+     * 
      * @param busMakeId the ID of the bus make
      * @return the bus make DTO if found
      */
@@ -47,18 +50,25 @@ public class BusMakeService {
         Optional<BusMakes> busMake = busMakeRepository.findById(busMakeId);
         return busMake.map(busMakeMapper::toDTO);
     }
-    
+
     /**
      * Get all bus makes
+     * 
      * @return list of all bus make DTOs
      */
     public List<BusMakeDTO> getAllBusMakes() {
         List<BusMakes> busMakes = busMakeRepository.findAll();
         return busMakes.stream().map(busMakeMapper::toDTO).toList();
     }
-    
+
+    public List<BusMakeDTO> getBusMakesByAgency(String agencyId) {
+        List<BusMakes> busMakes = busMakeRepository.findByAgencyid(agencyId);
+        return busMakes.stream().map(busMakeMapper::toDTO).toList();
+    }
+
     /**
      * Get a bus make by its name
+     * 
      * @param makeName the name of the bus make
      * @return the bus make DTO if found
      */
@@ -66,10 +76,11 @@ public class BusMakeService {
         Optional<BusMakes> busMake = busMakeRepository.findByMakeName(makeName);
         return busMake.map(busMakeMapper::toDTO);
     }
-    
+
     /**
      * Update an existing bus make
-     * @param busMakeId the ID of the bus make to update
+     * 
+     * @param busMakeId  the ID of the bus make to update
      * @param busMakeDTO the updated bus make data
      * @return the updated bus make DTO
      */
@@ -78,14 +89,16 @@ public class BusMakeService {
         if (existingBusMake.isPresent()) {
             BusMakes busMake = existingBusMake.get();
             busMake.setMakeName(busMakeDTO.getMakeName());
+            busMake.setAgencyid(busMakeDTO.getAgencyId());
             BusMakes updatedBusMake = busMakeRepository.save(busMake);
             return Optional.of(busMakeMapper.toDTO(updatedBusMake));
         }
         return Optional.empty();
     }
-    
+
     /**
      * Delete a bus make by its ID
+     * 
      * @param busMakeId the ID of the bus make to delete
      * @return true if deletion was successful
      */
@@ -97,4 +110,3 @@ public class BusMakeService {
         return false;
     }
 }
-

@@ -20,24 +20,27 @@ import com.example.agencyadmin.Services.DriverService;
 @RequestMapping("/api/v1/drivers")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class DriverController {
-    
+
     /** The Driver service for business logic */
     @Autowired
     private DriverService driverService;
-    
+
     /**
      * Create a new driver
+     * 
      * @param driverDTO the driver data transfer object
-     * @return ResponseEntity with the created driver DTO and HTTP 201 Created status
+     * @return ResponseEntity with the created driver DTO and HTTP 201 Created
+     *         status
      */
     @PostMapping
     public ResponseEntity<DriverDTO> createDriver(@RequestBody DriverDTO driverDTO) {
         DriverDTO createdDriver = driverService.createDriver(driverDTO);
         return new ResponseEntity<>(createdDriver, HttpStatus.CREATED);
     }
-    
+
     /**
      * Get a driver by its ID
+     * 
      * @param driverId the ID of the driver
      * @return ResponseEntity with the driver DTO if found, otherwise 404 Not Found
      */
@@ -47,9 +50,10 @@ public class DriverController {
                 .map(driver -> new ResponseEntity<>(driver, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Get all drivers
+     * 
      * @return ResponseEntity with list of all driver DTOs and HTTP 200 OK status
      */
     @GetMapping
@@ -57,9 +61,22 @@ public class DriverController {
         List<DriverDTO> drivers = driverService.getAllDrivers();
         return new ResponseEntity<>(drivers, HttpStatus.OK);
     }
-    
+
+    /**
+     * Get all drivers for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @return ResponseEntity with list of driver DTOs for the agency
+     */
+    @GetMapping("/agency/{agencyId}")
+    public ResponseEntity<List<DriverDTO>> getDriversByAgency(@PathVariable String agencyId) {
+        List<DriverDTO> drivers = driverService.getDriversByAgency(agencyId);
+        return new ResponseEntity<>(drivers, HttpStatus.OK);
+    }
+
     /**
      * Get a driver by their license number
+     * 
      * @param licenseNumber the license number
      * @return ResponseEntity with the driver DTO if found, otherwise 404 Not Found
      */
@@ -69,9 +86,10 @@ public class DriverController {
                 .map(driver -> new ResponseEntity<>(driver, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Get a driver by their full name
+     * 
      * @param fullName the full name of the driver
      * @return ResponseEntity with the driver DTO if found, otherwise 404 Not Found
      */
@@ -81,12 +99,14 @@ public class DriverController {
                 .map(driver -> new ResponseEntity<>(driver, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Update an existing driver
-     * @param driverId the ID of the driver to update
+     * 
+     * @param driverId  the ID of the driver to update
      * @param driverDTO the updated driver data
-     * @return ResponseEntity with the updated driver DTO if successful, otherwise 404 Not Found
+     * @return ResponseEntity with the updated driver DTO if successful, otherwise
+     *         404 Not Found
      */
     @PutMapping("/{driverId}")
     public ResponseEntity<DriverDTO> updateDriver(@PathVariable UUID driverId, @RequestBody DriverDTO driverDTO) {
@@ -94,11 +114,13 @@ public class DriverController {
                 .map(driver -> new ResponseEntity<>(driver, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Delete a driver by its ID
+     * 
      * @param driverId the ID of the driver to delete
-     * @return ResponseEntity with HTTP 204 No Content if successful, otherwise 404 Not Found
+     * @return ResponseEntity with HTTP 204 No Content if successful, otherwise 404
+     *         Not Found
      */
     @DeleteMapping("/{driverId}")
     public ResponseEntity<Void> deleteDriver(@PathVariable UUID driverId) {

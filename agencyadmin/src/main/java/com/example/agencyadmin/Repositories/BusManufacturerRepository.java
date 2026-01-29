@@ -7,4 +7,6 @@ import com.example.agencyadmin.Models.BusManufacturers;
 
 public interface BusManufacturerRepository extends JpaRepository<BusManufacturers, UUID> {
     Optional<BusManufacturers> findByManufacturerName(String manufacturerName);
+
+    java.util.List<BusManufacturers> findByAgencyid(String agencyid);
 }

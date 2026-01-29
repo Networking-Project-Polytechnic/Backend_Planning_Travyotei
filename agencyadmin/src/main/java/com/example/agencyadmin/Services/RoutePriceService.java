@@ -72,6 +72,17 @@ public class RoutePriceService {
         return routePrices.stream().map(routePriceMapper::toDTO).toList();
     }
 
+    public List<RoutePriceDTO> getPricesByAgency(String agencyId) {
+        List<RoutePrice> routePrices = routePriceRepository.findByAgencyid(agencyId);
+        return routePrices.stream().map(routePriceMapper::toDTO).toList();
+    }
+
+    public List<RoutePriceDTO> getPricesByRouteIds(List<UUID> routeIds) {
+        return routePriceRepository.findByRouteIdIn(routeIds).stream()
+                .map(routePriceMapper::toDTO)
+                .toList();
+    }
+
     /**
      * Get all prices for a specific bus
      * 
@@ -96,6 +107,7 @@ public class RoutePriceService {
             RoutePrice routePrice = existingRoutePrice.get();
             routePrice.setRouteId(routePriceDTO.getRouteId());
             routePrice.setBusId(routePriceDTO.getBusId());
+            routePrice.setAgencyid(routePriceDTO.getAgencyid());
             routePrice.setPriceAmount(routePriceDTO.getPriceAmount());
             routePrice.setCurrency(routePriceDTO.getCurrency());
             RoutePrice updatedRoutePrice = routePriceRepository.save(routePrice);

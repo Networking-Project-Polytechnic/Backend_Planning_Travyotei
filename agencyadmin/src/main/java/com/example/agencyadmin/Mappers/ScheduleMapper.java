@@ -31,7 +31,8 @@ public class ScheduleMapper {
                 schedule.getRouteid(),
                 schedule.getBusid(),
                 schedule.getAgencyid(),
-                schedule.getPriceid());
+                schedule.getPriceid(),
+                schedule.getDriverid());
     }
 
     /**
@@ -52,6 +53,7 @@ public class ScheduleMapper {
         schedule.setBusid(scheduleDTO.getBusid());
         schedule.setAgencyid(scheduleDTO.getAgencyid());
         schedule.setPriceid(scheduleDTO.getPriceid());
+        schedule.setDriverid(scheduleDTO.getDriverid());
         return schedule;
     }
 }

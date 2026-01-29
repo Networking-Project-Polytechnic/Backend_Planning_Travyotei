@@ -37,6 +37,9 @@ public class Schedule {
     @Column(name = "priceid")
     private UUID priceid;
 
+    @Column(name = "driverid")
+    private UUID driverid;
+
     public UUID getScheduleid() {
         return scheduleid;
     }
@@ -101,4 +104,11 @@ public class Schedule {
         this.priceid = priceid;
     }
 
+    public UUID getDriverid() {
+        return driverid;
+    }
+
+    public void setDriverid(UUID driverid) {
+        this.driverid = driverid;
+    }
 }

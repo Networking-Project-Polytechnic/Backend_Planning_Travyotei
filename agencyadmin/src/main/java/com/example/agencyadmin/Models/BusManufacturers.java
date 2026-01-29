@@ -14,8 +14,11 @@ public class BusManufacturers {
     @Column(name = "manufacturer_id")
     private UUID manufacturerId;
 
-    @Column(name = "manufacturer_name", nullable = false, unique = true)
+    @Column(name = "manufacturer_name", nullable = false)
     private String manufacturerName;
+
+    @Column(name = "agencyid")
+    private String agencyid;
 
     public UUID getManufacturerId() {
         return manufacturerId;
@@ -32,6 +35,12 @@ public class BusManufacturers {
     public void setManufacturerName(String manufacturerName) {
         this.manufacturerName = manufacturerName;
     }
-    
-    
+
+    public String getAgencyid() {
+        return agencyid;
+    }
+
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
+    }
 }

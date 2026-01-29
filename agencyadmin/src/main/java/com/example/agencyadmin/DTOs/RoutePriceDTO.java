@@ -26,6 +26,9 @@ public class RoutePriceDTO {
     /** The currency used for this price (e.g., "USD", "XAF") */
     private String currency;
 
+    /** The agency ID associated with this price */
+    private String agencyid;
+
     // ===== Constructors =====
 
     /**
@@ -37,11 +40,12 @@ public class RoutePriceDTO {
     /**
      * Constructor with all fields
      */
-    public RoutePriceDTO(UUID priceId, UUID routeId, UUID busId, Float priceAmount,
+    public RoutePriceDTO(UUID priceId, UUID routeId, UUID busId, String agencyid, Float priceAmount,
             String currency) {
         this.priceId = priceId;
         this.routeId = routeId;
         this.busId = busId;
+        this.agencyid = agencyid;
         this.priceAmount = priceAmount;
         this.currency = currency;
     }
@@ -86,5 +90,13 @@ public class RoutePriceDTO {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public String getAgencyid() {
+        return agencyid;
+    }
+
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
     }
 }

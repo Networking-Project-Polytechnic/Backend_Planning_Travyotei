@@ -6,14 +6,16 @@ import org.springframework.stereotype.Component;
 
 /**
  * Mapper class for converting between BusModels entity and BusModelDTO.
- * This mapper is responsible for converting BusModels JPA entities to DTOs and vice versa.
+ * This mapper is responsible for converting BusModels JPA entities to DTOs and
+ * vice versa.
  * It is used to decouple the database layer from the API layer.
  */
 @Component
 public class BusModelMapper {
-    
+
     /**
      * Converts a BusModels entity to BusModelDTO
+     * 
      * @param busModel the BusModels entity
      * @return BusModelDTO containing the data from the BusModels entity
      */
@@ -22,13 +24,14 @@ public class BusModelMapper {
             return null;
         }
         return new BusModelDTO(
-            busModel.getBusModelId(),
-            busModel.getModelName()
-        );
+                busModel.getBusModelId(),
+                busModel.getModelName(),
+                busModel.getAgencyid());
     }
-    
+
     /**
      * Converts a BusModelDTO to BusModels entity
+     * 
      * @param busModelDTO the BusModelDTO
      * @return BusModels entity containing the data from the DTO
      */
@@ -38,7 +41,7 @@ public class BusModelMapper {
         }
         BusModels busModel = new BusModels();
         busModel.setModelName(busModelDTO.getModelName());
+        busModel.setAgencyid(busModelDTO.getAgencyId());
         return busModel;
     }
 }
-

@@ -7,4 +7,6 @@ import com.example.agencyadmin.Models.FuelType;
 
 public interface FuelTypeRepository extends JpaRepository<FuelType, UUID> {
     Optional<FuelType> findByFuelTypeName(String fuelTypename);
+
+    java.util.List<FuelType> findByAgencyid(String agencyid);
 }

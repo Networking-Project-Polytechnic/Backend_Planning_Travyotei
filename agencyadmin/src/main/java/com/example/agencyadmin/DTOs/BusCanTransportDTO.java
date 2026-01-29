@@ -30,4 +30,14 @@ public class BusCanTransportDTO {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    private String agencyId;
+
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
+    }
 }

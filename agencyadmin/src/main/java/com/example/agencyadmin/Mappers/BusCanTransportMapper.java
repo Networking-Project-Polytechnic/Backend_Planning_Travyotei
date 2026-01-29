@@ -15,6 +15,7 @@ public class BusCanTransportMapper {
         dto.setTransportId(entity.getTransportId());
         dto.setItemName(entity.getItemName());
         dto.setDescription(entity.getDescription());
+        dto.setAgencyId(entity.getAgencyid());
         return dto;
     }
 
@@ -26,6 +27,7 @@ public class BusCanTransportMapper {
         entity.setTransportId(dto.getTransportId());
         entity.setItemName(dto.getItemName());
         entity.setDescription(dto.getDescription());
+        entity.setAgencyid(dto.getAgencyId());
         return entity;
     }
 }

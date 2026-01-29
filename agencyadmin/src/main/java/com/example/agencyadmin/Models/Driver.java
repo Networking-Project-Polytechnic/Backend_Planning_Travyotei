@@ -11,49 +11,71 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "driver")
 public class Driver {
-@Id
-@GeneratedValue(strategy = GenerationType.AUTO)
-@Column(name = "driver_id", updatable = false, nullable = false, columnDefinition = "uuid DEFAULT uuid_generate_v4()")
-private UUID driverId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "driver_id", updatable = false, nullable = false, columnDefinition = "uuid DEFAULT uuid_generate_v4()")
+    private UUID driverId;
 
-@NotNull
-private String fullName;
-private String phone;
+    @NotNull
+    private String fullName;
+    private String phone;
+    @NotNull
+    @Column(name = "agencyid")
+    private String agencyid;
 
-@Column(unique = true)
-private String licenseNumber;
+    @Column(unique = true)
+    private String licenseNumber;
 
-public UUID getDriverId() {
-    return driverId;
-}
+    @Column(length = 1000)
+    private String description;
 
-public void setDriverId(UUID driverId) {
-    this.driverId = driverId;
-}
+    public UUID getDriverId() {
+        return driverId;
+    }
 
-public String getFullName() {
-    return fullName;
-}
+    public void setDriverId(UUID driverId) {
+        this.driverId = driverId;
+    }
 
-public void setFullName(String fullName) {
-    this.fullName = fullName;
-}
+    public String getFullName() {
+        return fullName;
+    }
 
-public String getPhone() {
-    return phone;
-}
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-public void setPhone(String phone) {
-    this.phone = phone;
-}
+    public String getPhone() {
+        return phone;
+    }
 
-public String getLicenseNumber() {
-    return licenseNumber;
-}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-public void setLicenseNumber(String licenseNumber) {
-    this.licenseNumber = licenseNumber;
-}
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
 
-// getters & setters
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
+    public String getAgencyid() {
+        return agencyid;
+    }
+
+    public void setAgencyid(String agencyid) {
+        this.agencyid = agencyid;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    // getters & setters
 }
