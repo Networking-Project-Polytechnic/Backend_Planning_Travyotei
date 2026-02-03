@@ -85,6 +85,15 @@ databaseChangeLog:
             splitStatements: false
 
   - changeSet:
+      id: add-agency-id-to-route-price-v1
+      author: antigravity
+      changes:
+        - sqlFile:
+            path: add_agency_id_to_route_price.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+
+  - changeSet:
       id: repopulate-v3
       author: antigravity
       changes:
