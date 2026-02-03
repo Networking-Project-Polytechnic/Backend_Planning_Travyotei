@@ -94,6 +94,15 @@ databaseChangeLog:
             splitStatements: false
 
   - changeSet:
+      id: sync-reference-tables-v1
+      author: antigravity
+      changes:
+        - sqlFile:
+            path: sync_reference_tables.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+
+  - changeSet:
       id: repopulate-v3
       author: antigravity
       changes:
