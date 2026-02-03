@@ -76,6 +76,15 @@ databaseChangeLog:
             splitStatements: false
 
   - changeSet:
+      id: create-assignments-table-v1
+      author: antigravity
+      changes:
+        - sqlFile:
+            path: create_assignments_table.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+
+  - changeSet:
       id: repopulate-v3
       author: antigravity
       changes:
