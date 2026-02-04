@@ -1,112 +1,15 @@
 databaseChangeLog:
   - changeSet:
-      id: schema-v1
-      author: aghet
-      changes:
-        - sqlFile:
-            path: schema.sql
-            relativeToChangelogFile: true
-
-  - changeSet:
-      id: data-v1
-      author: aghet
-      changes:
-        - sqlFile:
-            path: data.sql
-            relativeToChangelogFile: true
-  - changeSet:
-      id: rename-columns-v1
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: rename_columns.sql
-            relativeToChangelogFile: true
-            splitStatements: false
-  - changeSet:
-      id: add-bus-features-v1
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: add_bus_features.sql
-            relativeToChangelogFile: true
-
-  - changeSet:
-      id: refactor-route-fair-v1
+      id: multi-agency-master-reset-v2
       author: antigravity
       runOnChange: true
       changes:
         - sqlFile:
-            path: refactor_route_fair.sql
+            path: schema_v2.sql
             relativeToChangelogFile: true
-            splitStatements: false
+            splitStatements: true
+        - sqlFile:
+            path: data_v2.sql
+            relativeToChangelogFile: true
+            splitStatements: true
 
-  - changeSet:
-      id: add-agency-id-to-driver-v1
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: add_agency_id_to_driver.sql
-            relativeToChangelogFile: true
-            splitStatements: false
-
-  - changeSet:
-      id: add-driver-id-to-schedule-v1
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: add_driver_id_to_schedule.sql
-            relativeToChangelogFile: true
-            splitStatements: false
-
-  - changeSet:
-      id: migrate-to-cloudinary-v1
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: migrate_to_cloudinary.sql
-            relativeToChangelogFile: true
-            splitStatements: false
-  - changeSet:
-      id: add-description-to-driver-v1
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: add_description_to_driver.sql
-            relativeToChangelogFile: true
-            splitStatements: false
-
-  - changeSet:
-      id: create-assignments-table-v1
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: create_assignments_table.sql
-            relativeToChangelogFile: true
-            splitStatements: false
-
-  - changeSet:
-      id: add-agency-id-to-route-price-v1
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: add_agency_id_to_route_price.sql
-            relativeToChangelogFile: true
-            splitStatements: false
-
-  - changeSet:
-      id: sync-reference-tables-v1
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: sync_reference_tables.sql
-            relativeToChangelogFile: true
-            splitStatements: false
-
-  - changeSet:
-      id: repopulate-v3
-      author: antigravity
-      changes:
-        - sqlFile:
-            path: repopulate_v3.sql
-            relativeToChangelogFile: true
-            splitStatements: false

@@ -23,6 +23,7 @@ public class Bus {
     private UUID busId;
 
     @NotNull
+    @Column(name = "agencyid")
     private UUID agencyId;
     @NotNull
     private UUID busMakeId;
@@ -38,7 +39,7 @@ public class Bus {
     @Column(name = "bus_type_id")
     private UUID busTypeId;
     @NotNull
-    @Column(name = "registration_number", unique = true)
+    @Column(name = "registration_number")
     private String registrationNumber;
 
     private LocalDate registrationExpiryDate;

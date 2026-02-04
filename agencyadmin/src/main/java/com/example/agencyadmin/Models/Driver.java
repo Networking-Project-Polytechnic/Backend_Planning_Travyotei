@@ -23,7 +23,7 @@ public class Driver {
     @Column(name = "agencyid")
     private String agencyid;
 
-    @Column(unique = true)
+    @Column
     private String licenseNumber;
 
     @Column(length = 1000)
