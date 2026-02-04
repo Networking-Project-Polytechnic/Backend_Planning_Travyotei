@@ -39,6 +39,20 @@ public class BusMakeController {
     }
 
     /**
+     * Create a new bus make for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param busMakeDTO the bus make data
+     * @return ResponseEntity with the created bus make DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<BusMakeDTO> createBusMakeScoped(@PathVariable String agencyId,
+            @RequestBody BusMakeDTO busMakeDTO) {
+        BusMakeDTO createdBusMake = busMakeService.createBusMakeScoped(agencyId, busMakeDTO);
+        return new ResponseEntity<>(createdBusMake, HttpStatus.CREATED);
+    }
+
+    /**
      * Get a bus make by its ID
      * 
      * @param busMakeId the ID of the bus make
@@ -105,6 +119,22 @@ public class BusMakeController {
     }
 
     /**
+     * Update an existing bus make for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param busMakeId  the ID of the bus make to update
+     * @param busMakeDTO the updated bus make data
+     * @return ResponseEntity with the updated bus make DTO if successful
+     */
+    @PutMapping("/agency/{agencyId}/{busMakeId}")
+    public ResponseEntity<BusMakeDTO> updateBusMakeScoped(@PathVariable String agencyId, @PathVariable UUID busMakeId,
+            @RequestBody BusMakeDTO busMakeDTO) {
+        return busMakeService.updateBusMakeScoped(agencyId, busMakeId, busMakeDTO)
+                .map(make -> new ResponseEntity<>(make, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Delete a bus make by its ID
      * 
      * @param busMakeId the ID of the bus make to delete
@@ -114,6 +144,21 @@ public class BusMakeController {
     @DeleteMapping("/{busMakeId}")
     public ResponseEntity<Void> deleteBusMake(@PathVariable UUID busMakeId) {
         if (busMakeService.deleteBusMake(busMakeId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a bus make for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param busMakeId the ID of the bus make to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{busMakeId}")
+    public ResponseEntity<Void> deleteBusMakeScoped(@PathVariable String agencyId, @PathVariable UUID busMakeId) {
+        if (busMakeService.deleteBusMakeScoped(agencyId, busMakeId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

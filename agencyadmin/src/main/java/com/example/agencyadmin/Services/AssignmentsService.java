@@ -28,6 +28,18 @@ public class AssignmentsService {
         return assignmentsMapper.toDTO(savedAssignment);
     }
 
+    /**
+     * Create a new assignment for a specific agency
+     * 
+     * @param agencyId       the ID of the agency
+     * @param assignmentsDTO the assignment data
+     * @return the created assignment DTO
+     */
+    public AssignmentsDTO createAssignmentScoped(String agencyId, AssignmentsDTO assignmentsDTO) {
+        assignmentsDTO.setAgencyId(agencyId);
+        return createAssignment(assignmentsDTO);
+    }
+
     public List<AssignmentsDTO> getAssignmentsByAgency(String agencyId) {
         return assignmentsRepository.findByAgencyId(agencyId).stream()
                 .map(assignmentsMapper::toDTO)
@@ -56,10 +68,43 @@ public class AssignmentsService {
         });
     }
 
+    /**
+     * Update an existing assignment for a specific agency
+     * 
+     * @param agencyId       the ID of the agency
+     * @param assignmentId   the ID of the assignment to update
+     * @param assignmentsDTO the updated assignment data
+     * @return the updated assignment DTO if successful
+     */
+    public Optional<AssignmentsDTO> updateAssignmentScoped(String agencyId, UUID assignmentId,
+            AssignmentsDTO assignmentsDTO) {
+        Optional<Assignments> existingAssignment = assignmentsRepository.findById(assignmentId);
+        if (existingAssignment.isPresent() && existingAssignment.get().getAgencyId().equals(agencyId)) {
+            assignmentsDTO.setAgencyId(agencyId); // Ensure agencyId remains correct
+            return updateAssignment(assignmentId, assignmentsDTO);
+        }
+        return Optional.empty();
+    }
+
     public boolean deleteAssignment(UUID assignmentId) {
         if (assignmentsRepository.existsById(assignmentId)) {
             assignmentsRepository.deleteById(assignmentId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete an assignment for a specific agency
+     * 
+     * @param agencyId     the ID of the agency
+     * @param assignmentId the ID of the assignment to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteAssignmentScoped(String agencyId, UUID assignmentId) {
+        Optional<Assignments> existingAssignment = assignmentsRepository.findById(assignmentId);
+        if (existingAssignment.isPresent() && existingAssignment.get().getAgencyId().equals(agencyId)) {
+            return deleteAssignment(assignmentId);
         }
         return false;
     }

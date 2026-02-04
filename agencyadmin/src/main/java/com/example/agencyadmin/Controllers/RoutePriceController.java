@@ -39,6 +39,20 @@ public class RoutePriceController {
     }
 
     /**
+     * Create a new route price for a specific agency
+     * 
+     * @param agencyId      the ID of the agency
+     * @param routePriceDTO the route price data
+     * @return ResponseEntity with the created route price DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<RoutePriceDTO> createRoutePriceScoped(@PathVariable String agencyId,
+            @RequestBody RoutePriceDTO routePriceDTO) {
+        RoutePriceDTO createdRoutePrice = routePriceService.createRoutePriceScoped(agencyId, routePriceDTO);
+        return new ResponseEntity<>(createdRoutePrice, HttpStatus.CREATED);
+    }
+
+    /**
      * Get a route price by its ID
      * 
      * @param priceId the ID of the route price
@@ -117,6 +131,22 @@ public class RoutePriceController {
     }
 
     /**
+     * Update an existing route price for a specific agency
+     * 
+     * @param agencyId      the ID of the agency
+     * @param priceId       the ID of the route price to update
+     * @param routePriceDTO the updated route price data
+     * @return ResponseEntity with the updated route price DTO
+     */
+    @PutMapping("/agency/{agencyId}/{priceId}")
+    public ResponseEntity<RoutePriceDTO> updateRoutePriceScoped(@PathVariable String agencyId,
+            @PathVariable UUID priceId, @RequestBody RoutePriceDTO routePriceDTO) {
+        return routePriceService.updateRoutePriceScoped(agencyId, priceId, routePriceDTO)
+                .map(price -> new ResponseEntity<>(price, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Delete a route price by its ID
      * 
      * @param priceId the ID of the route price to delete
@@ -126,6 +156,21 @@ public class RoutePriceController {
     @DeleteMapping("/{priceId}")
     public ResponseEntity<Void> deleteRoutePrice(@PathVariable UUID priceId) {
         if (routePriceService.deleteRoutePrice(priceId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a route price for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param priceId  the ID of the route price to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{priceId}")
+    public ResponseEntity<Void> deleteRoutePriceScoped(@PathVariable String agencyId, @PathVariable UUID priceId) {
+        if (routePriceService.deleteRoutePriceScoped(agencyId, priceId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

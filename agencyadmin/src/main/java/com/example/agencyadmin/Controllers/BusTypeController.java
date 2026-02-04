@@ -39,6 +39,20 @@ public class BusTypeController {
     }
 
     /**
+     * Create a new bus type for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param busTypeDTO the bus type data
+     * @return ResponseEntity with the created bus type DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<BusTypeDTO> createBusTypeScoped(@PathVariable String agencyId,
+            @RequestBody BusTypeDTO busTypeDTO) {
+        BusTypeDTO createdBusType = busTypeService.createBusTypeScoped(agencyId, busTypeDTO);
+        return new ResponseEntity<>(createdBusType, HttpStatus.CREATED);
+    }
+
+    /**
      * Get a bus type by its ID
      * 
      * @param busTypeId the ID of the bus type
@@ -105,6 +119,22 @@ public class BusTypeController {
     }
 
     /**
+     * Update an existing bus type for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param busTypeId  the ID of the bus type to update
+     * @param busTypeDTO the updated bus type data
+     * @return ResponseEntity with the updated bus type DTO if successful
+     */
+    @PutMapping("/agency/{agencyId}/{busTypeId}")
+    public ResponseEntity<BusTypeDTO> updateBusTypeScoped(@PathVariable String agencyId, @PathVariable UUID busTypeId,
+            @RequestBody BusTypeDTO busTypeDTO) {
+        return busTypeService.updateBusTypeScoped(agencyId, busTypeId, busTypeDTO)
+                .map(type -> new ResponseEntity<>(type, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Delete a bus type by its ID
      * 
      * @param busTypeId the ID of the bus type to delete
@@ -114,6 +144,21 @@ public class BusTypeController {
     @DeleteMapping("/{busTypeId}")
     public ResponseEntity<Void> deleteBusType(@PathVariable UUID busTypeId) {
         if (busTypeService.deleteBusType(busTypeId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a bus type for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param busTypeId the ID of the bus type to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{busTypeId}")
+    public ResponseEntity<Void> deleteBusTypeScoped(@PathVariable String agencyId, @PathVariable UUID busTypeId) {
+        if (busTypeService.deleteBusTypeScoped(agencyId, busTypeId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

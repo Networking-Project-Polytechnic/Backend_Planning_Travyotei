@@ -20,13 +20,14 @@ import com.example.agencyadmin.Services.RouteService;
 @RequestMapping("/api/v1/routes")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class RouteController {
-    
+
     /** The Route service for business logic */
     @Autowired
     private RouteService routeService;
-    
+
     /**
      * Create a new route
+     * 
      * @param routeDTO the route data transfer object
      * @return ResponseEntity with the created route DTO and HTTP 201 Created status
      */
@@ -35,9 +36,23 @@ public class RouteController {
         RouteDTO createdRoute = routeService.createRoute(routeDTO);
         return new ResponseEntity<>(createdRoute, HttpStatus.CREATED);
     }
-    
+
+    /**
+     * Create a new route for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param routeDTO the route data
+     * @return ResponseEntity with the created route DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<RouteDTO> createRouteScoped(@PathVariable String agencyId, @RequestBody RouteDTO routeDTO) {
+        RouteDTO createdRoute = routeService.createRouteScoped(agencyId, routeDTO);
+        return new ResponseEntity<>(createdRoute, HttpStatus.CREATED);
+    }
+
     /**
      * Get a route by its ID
+     * 
      * @param routeId the ID of the route
      * @return ResponseEntity with the route DTO if found, otherwise 404 Not Found
      */
@@ -47,9 +62,10 @@ public class RouteController {
                 .map(route -> new ResponseEntity<>(route, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Get all routes
+     * 
      * @return ResponseEntity with list of all route DTOs and HTTP 200 OK status
      */
     @GetMapping
@@ -57,9 +73,10 @@ public class RouteController {
         List<RouteDTO> routes = routeService.getAllRoutes();
         return new ResponseEntity<>(routes, HttpStatus.OK);
     }
-    
+
     /**
      * Get all routes for a specific agency
+     * 
      * @param agencyId the ID of the agency
      * @return ResponseEntity with list of route DTOs for the agency
      */
@@ -68,25 +85,29 @@ public class RouteController {
         List<RouteDTO> routes = routeService.getRoutesByAgency(agencyId);
         return new ResponseEntity<>(routes, HttpStatus.OK);
     }
-    
+
     /**
      * Get a route between two locations
+     * 
      * @param startLocationId the starting location ID
-     * @param endLocationId the ending location ID
+     * @param endLocationId   the ending location ID
      * @return ResponseEntity with the route DTO if found, otherwise 404 Not Found
      */
     @GetMapping("/locations/{startLocationId}/{endLocationId}")
-    public ResponseEntity<RouteDTO> getRouteBetweenLocations(@PathVariable UUID startLocationId, @PathVariable UUID endLocationId) {
+    public ResponseEntity<RouteDTO> getRouteBetweenLocations(@PathVariable UUID startLocationId,
+            @PathVariable UUID endLocationId) {
         return routeService.getRouteBetweenLocations(startLocationId, endLocationId)
                 .map(route -> new ResponseEntity<>(route, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Update an existing route
-     * @param routeId the ID of the route to update
+     * 
+     * @param routeId  the ID of the route to update
      * @param routeDTO the updated route data
-     * @return ResponseEntity with the updated route DTO if successful, otherwise 404 Not Found
+     * @return ResponseEntity with the updated route DTO if successful, otherwise
+     *         404 Not Found
      */
     @PutMapping("/{routeId}")
     public ResponseEntity<RouteDTO> updateRoute(@PathVariable UUID routeId, @RequestBody RouteDTO routeDTO) {
@@ -94,15 +115,48 @@ public class RouteController {
                 .map(route -> new ResponseEntity<>(route, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
+    /**
+     * Update an existing route for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param routeId  the ID of the route to update
+     * @param routeDTO the updated route data
+     * @return ResponseEntity with the updated route DTO
+     */
+    @PutMapping("/agency/{agencyId}/{routeId}")
+    public ResponseEntity<RouteDTO> updateRouteScoped(@PathVariable String agencyId, @PathVariable UUID routeId,
+            @RequestBody RouteDTO routeDTO) {
+        return routeService.updateRouteScoped(agencyId, routeId, routeDTO)
+                .map(route -> new ResponseEntity<>(route, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     /**
      * Delete a route by its ID
+     * 
      * @param routeId the ID of the route to delete
-     * @return ResponseEntity with HTTP 204 No Content if successful, otherwise 404 Not Found
+     * @return ResponseEntity with HTTP 204 No Content if successful, otherwise 404
+     *         Not Found
      */
     @DeleteMapping("/{routeId}")
     public ResponseEntity<Void> deleteRoute(@PathVariable UUID routeId) {
         if (routeService.deleteRoute(routeId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a route for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param routeId  the ID of the route to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{routeId}")
+    public ResponseEntity<Void> deleteRouteScoped(@PathVariable String agencyId, @PathVariable UUID routeId) {
+        if (routeService.deleteRouteScoped(agencyId, routeId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -28,16 +28,23 @@ public class TransmissionTypeService {
     @Autowired
     private TransmissionTypeMapper transmissionTypeMapper;
 
-    /**
-     * Create a new transmission type
-     * 
-     * @param transmissionTypeDTO the transmission type data transfer object
-     * @return the created transmission type DTO
-     */
     public TransmissionTypeDTO createTransmissionType(TransmissionTypeDTO transmissionTypeDTO) {
         TransmissionType transmissionType = transmissionTypeMapper.toEntity(transmissionTypeDTO);
         TransmissionType savedTransmissionType = transmissionTypeRepository.save(transmissionType);
         return transmissionTypeMapper.toDTO(savedTransmissionType);
+    }
+
+    /**
+     * Create a new transmission type for a specific agency
+     * 
+     * @param agencyId            the ID of the agency
+     * @param transmissionTypeDTO the transmission type data
+     * @return the created transmission type DTO
+     */
+    public TransmissionTypeDTO createTransmissionTypeScoped(String agencyId,
+            TransmissionTypeDTO transmissionTypeDTO) {
+        transmissionTypeDTO.setAgencyId(agencyId);
+        return createTransmissionType(transmissionTypeDTO);
     }
 
     /**
@@ -98,6 +105,24 @@ public class TransmissionTypeService {
     }
 
     /**
+     * Update an existing transmission type for a specific agency
+     * 
+     * @param agencyId            the ID of the agency
+     * @param transmissionTypeId  the ID of the transmission type to update
+     * @param transmissionTypeDTO the updated transmission type data
+     * @return the updated transmission type DTO if successful
+     */
+    public Optional<TransmissionTypeDTO> updateTransmissionTypeScoped(String agencyId, UUID transmissionTypeId,
+            TransmissionTypeDTO transmissionTypeDTO) {
+        Optional<TransmissionType> existingTransmissionType = transmissionTypeRepository.findById(transmissionTypeId);
+        if (existingTransmissionType.isPresent() && existingTransmissionType.get().getAgencyid().equals(agencyId)) {
+            transmissionTypeDTO.setAgencyId(agencyId); // Ensure agencyId remains correct
+            return updateTransmissionType(transmissionTypeId, transmissionTypeDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a transmission type by its ID
      * 
      * @param transmissionTypeId the ID of the transmission type to delete
@@ -107,6 +132,21 @@ public class TransmissionTypeService {
         if (transmissionTypeRepository.existsById(transmissionTypeId)) {
             transmissionTypeRepository.deleteById(transmissionTypeId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a transmission type for a specific agency
+     * 
+     * @param agencyId           the ID of the agency
+     * @param transmissionTypeId the ID of the transmission type to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteTransmissionTypeScoped(String agencyId, UUID transmissionTypeId) {
+        Optional<TransmissionType> existingTransmissionType = transmissionTypeRepository.findById(transmissionTypeId);
+        if (existingTransmissionType.isPresent() && existingTransmissionType.get().getAgencyid().equals(agencyId)) {
+            return deleteTransmissionType(transmissionTypeId);
         }
         return false;
     }

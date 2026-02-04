@@ -68,6 +68,18 @@ public class BusService {
     }
 
     /**
+     * Create a new bus for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param busDTO   the bus data
+     * @return the created bus DTO
+     */
+    public BusDTO createBusScoped(UUID agencyId, BusDTO busDTO) {
+        busDTO.setAgencyId(agencyId);
+        return createBus(busDTO);
+    }
+
+    /**
      * Get a bus by its ID
      * 
      * @param busId the ID of the bus
@@ -151,6 +163,23 @@ public class BusService {
     }
 
     /**
+     * Update an existing bus for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param busId    the ID of the bus to update
+     * @param busDTO   the updated bus data
+     * @return the updated bus DTO if successful
+     */
+    public Optional<BusDTO> updateBusScoped(UUID agencyId, UUID busId, BusDTO busDTO) {
+        Optional<Bus> existingBus = busRepository.findById(busId);
+        if (existingBus.isPresent() && existingBus.get().getAgencyId().equals(agencyId)) {
+            busDTO.setAgencyId(agencyId); // Ensure agencyId remains correct
+            return updateBus(busId, busDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a bus by its ID
      * 
      * @param busId the ID of the bus to delete
@@ -180,6 +209,22 @@ public class BusService {
             // 6. Finally delete the bus
             busRepository.deleteById(busId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a bus for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param busId    the ID of the bus to delete
+     * @return true if deletion was successful
+     */
+    @org.springframework.transaction.annotation.Transactional
+    public boolean deleteBusScoped(UUID agencyId, UUID busId) {
+        Optional<Bus> existingBus = busRepository.findById(busId);
+        if (existingBus.isPresent() && existingBus.get().getAgencyId().equals(agencyId)) {
+            return deleteBus(busId);
         }
         return false;
     }

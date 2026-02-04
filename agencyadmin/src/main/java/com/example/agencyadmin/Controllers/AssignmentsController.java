@@ -31,6 +31,13 @@ public class AssignmentsController {
         return new ResponseEntity<>(createdAssignment, HttpStatus.CREATED);
     }
 
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<AssignmentsDTO> createAssignmentScoped(@PathVariable String agencyId,
+            @RequestBody AssignmentsDTO assignmentsDTO) {
+        AssignmentsDTO createdAssignment = assignmentsService.createAssignmentScoped(agencyId, assignmentsDTO);
+        return new ResponseEntity<>(createdAssignment, HttpStatus.CREATED);
+    }
+
     @GetMapping("/agency/{agencyId}")
     public ResponseEntity<List<AssignmentsDTO>> getAssignmentsByAgency(@PathVariable String agencyId) {
         return ResponseEntity.ok(assignmentsService.getAssignmentsByAgency(agencyId));
@@ -56,9 +63,26 @@ public class AssignmentsController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @org.springframework.web.bind.annotation.PutMapping("/agency/{agencyId}/{assignmentId}")
+    public ResponseEntity<AssignmentsDTO> updateAssignmentScoped(@PathVariable String agencyId,
+            @PathVariable UUID assignmentId, @RequestBody AssignmentsDTO assignmentsDTO) {
+        return assignmentsService.updateAssignmentScoped(agencyId, assignmentId, assignmentsDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @org.springframework.web.bind.annotation.DeleteMapping("/{assignmentId}")
     public ResponseEntity<Void> deleteAssignment(@PathVariable UUID assignmentId) {
         if (assignmentsService.deleteAssignment(assignmentId)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping("/agency/{agencyId}/{assignmentId}")
+    public ResponseEntity<Void> deleteAssignmentScoped(@PathVariable String agencyId,
+            @PathVariable UUID assignmentId) {
+        if (assignmentsService.deleteAssignmentScoped(agencyId, assignmentId)) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

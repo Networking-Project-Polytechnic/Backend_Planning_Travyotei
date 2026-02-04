@@ -119,6 +119,18 @@ public class ScheduleService {
     }
 
     /**
+     * Create a new schedule for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param scheduleDTO the schedule data
+     * @return the created schedule DTO
+     */
+    public ScheduleDTO createScheduleScoped(String agencyId, ScheduleDTO scheduleDTO) {
+        scheduleDTO.setAgencyid(agencyId);
+        return createSchedule(scheduleDTO);
+    }
+
+    /**
      * Get a schedule by its ID
      * 
      * @param scheduleId the ID of the schedule
@@ -230,6 +242,23 @@ public class ScheduleService {
     }
 
     /**
+     * Update an existing schedule for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param scheduleId  the ID of the schedule to update
+     * @param scheduleDTO the updated schedule data
+     * @return the updated schedule DTO if successful
+     */
+    public Optional<ScheduleDTO> updateScheduleScoped(String agencyId, UUID scheduleId, ScheduleDTO scheduleDTO) {
+        Optional<Schedule> existingSchedule = scheduleRepository.findById(scheduleId);
+        if (existingSchedule.isPresent() && existingSchedule.get().getAgencyid().equals(agencyId)) {
+            scheduleDTO.setAgencyid(agencyId); // Ensure agencyid remains correct
+            return updateSchedule(scheduleId, scheduleDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a schedule by its ID
      * 
      * @param scheduleId the ID of the schedule to delete
@@ -241,5 +270,56 @@ public class ScheduleService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Delete a schedule for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param scheduleId the ID of the schedule to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteScheduleScoped(String agencyId, UUID scheduleId) {
+        Optional<Schedule> existingSchedule = scheduleRepository.findById(scheduleId);
+        if (existingSchedule.isPresent() && existingSchedule.get().getAgencyid().equals(agencyId)) {
+            return deleteSchedule(scheduleId);
+        }
+        return false;
+    }
+
+    /**
+     * Search for schedules across all agencies filtering by route locations and
+     * date
+     * 
+     * @param startLocationId the start location ID
+     * @param stopLocationId  the end location ID
+     * @param date            the date of travel
+     * @return list of detailed schedules matching the criteria
+     */
+    public List<ScheduleDetailsDTO> searchGlobalSchedules(UUID startLocationId, UUID stopLocationId, String date) {
+        List<Schedule> schedules = scheduleRepository.findGlobalSchedules(startLocationId, stopLocationId, date);
+        return schedules.stream()
+                .map(s -> getScheduleDetails(s.getScheduleid()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+    }
+
+    /**
+     * Search for schedules across all agencies filtering by route location names
+     * and date
+     * 
+     * @param start the start location name
+     * @param stop  the end location name
+     * @param date  the date of travel
+     * @return list of detailed schedules matching the criteria
+     */
+    public List<ScheduleDetailsDTO> searchGlobalSchedulesByName(String start, String stop, String date) {
+        List<Schedule> schedules = scheduleRepository.findGlobalSchedulesByName(start, stop, date);
+        return schedules.stream()
+                .map(s -> getScheduleDetails(s.getScheduleid()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
     }
 }

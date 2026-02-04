@@ -40,6 +40,20 @@ public class ScheduleController {
     }
 
     /**
+     * Create a new schedule for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param scheduleDTO the schedule data
+     * @return ResponseEntity with the created schedule DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<ScheduleDTO> createScheduleScoped(@PathVariable String agencyId,
+            @RequestBody ScheduleDTO scheduleDTO) {
+        ScheduleDTO createdSchedule = scheduleService.createScheduleScoped(agencyId, scheduleDTO);
+        return new ResponseEntity<>(createdSchedule, HttpStatus.CREATED);
+    }
+
+    /**
      * Get a schedule by its ID
      * 
      * @param scheduleId the ID of the schedule
@@ -136,6 +150,22 @@ public class ScheduleController {
     }
 
     /**
+     * Update an existing schedule for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param scheduleId  the ID of the schedule to update
+     * @param scheduleDTO the updated schedule data
+     * @return ResponseEntity with the updated schedule DTO
+     */
+    @PutMapping("/agency/{agencyId}/{scheduleId}")
+    public ResponseEntity<ScheduleDTO> updateScheduleScoped(@PathVariable String agencyId,
+            @PathVariable UUID scheduleId, @RequestBody ScheduleDTO scheduleDTO) {
+        return scheduleService.updateScheduleScoped(agencyId, scheduleId, scheduleDTO)
+                .map(schedule -> new ResponseEntity<>(schedule, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Delete a schedule by its ID
      * 
      * @param scheduleId the ID of the schedule to delete
@@ -148,5 +178,56 @@ public class ScheduleController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a schedule for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param scheduleId the ID of the schedule to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{scheduleId}")
+    public ResponseEntity<Void> deleteScheduleScoped(@PathVariable String agencyId, @PathVariable UUID scheduleId) {
+        if (scheduleService.deleteScheduleScoped(agencyId, scheduleId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Search for schedules across all agencies by locations and date
+     * 
+     * @param startLocationId the ID of the start location
+     * @param stopLocationId  the ID of the end location
+     * @param date            the date of travel
+     * @return ResponseEntity with list of detailed schedules
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<ScheduleDetailsDTO>> searchGlobalSchedules(
+            @RequestParam UUID startLocationId,
+            @RequestParam UUID stopLocationId,
+            @RequestParam String date) {
+        List<ScheduleDetailsDTO> schedules = scheduleService
+                .searchGlobalSchedules(startLocationId, stopLocationId, date);
+        return new ResponseEntity<>(schedules, HttpStatus.OK);
+    }
+
+    /**
+     * Search for schedules across all agencies using location names in the URL path
+     * 
+     * @param start the start location name
+     * @param stop  the end location name
+     * @param date  the date of travel
+     * @return ResponseEntity with list of detailed schedules
+     */
+    @GetMapping("/search/{start}/{stop}/{date}")
+    public ResponseEntity<List<ScheduleDetailsDTO>> searchGlobalSchedulesByName(
+            @PathVariable String start,
+            @PathVariable String stop,
+            @PathVariable String date) {
+        List<ScheduleDetailsDTO> schedules = scheduleService
+                .searchGlobalSchedulesByName(start, stop, date);
+        return new ResponseEntity<>(schedules, HttpStatus.OK);
     }
 }

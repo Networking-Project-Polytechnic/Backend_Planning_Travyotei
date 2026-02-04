@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.agencyadmin.DTOs.DriverImageDTO;
 import com.example.agencyadmin.Models.DriverImage;
 import com.example.agencyadmin.Repositories.DriverImageRepository;
+import com.example.agencyadmin.Repositories.DriverRepository;
 import com.example.agencyadmin.Mappers.DriverImageMapper;
 
 /**
@@ -28,6 +29,9 @@ public class DriverImageService {
     @Autowired
     private DriverImageMapper driverImageMapper;
 
+    @Autowired
+    private DriverRepository driverRepository;
+
     /**
      * Create a new driver image record (metadata only).
      * 
@@ -42,6 +46,20 @@ public class DriverImageService {
         }
         DriverImage savedDriverImage = driverImageRepository.save(driverImage);
         return driverImageMapper.toDTO(savedDriverImage);
+    }
+
+    /**
+     * Create a new driver image for a specific agency.
+     * Validates that the driver belongs to the agency.
+     * 
+     * @param agencyId       the ID of the agency
+     * @param driverImageDTO the driver image data
+     * @return the created driver image DTO if successful
+     */
+    public Optional<DriverImageDTO> createDriverImageScoped(String agencyId, DriverImageDTO driverImageDTO) {
+        return driverRepository.findById(driverImageDTO.getDriverId())
+                .filter(driver -> driver.getAgencyid().equals(agencyId))
+                .map(driver -> createDriverImage(driverImageDTO));
     }
 
     /**
@@ -155,6 +173,26 @@ public class DriverImageService {
         if (driverImageRepository.existsById(imageId)) {
             driverImageRepository.deleteById(imageId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a driver image for a specific agency.
+     * Validates that the driver associated with the image belongs to the agency.
+     * 
+     * @param agencyId the ID of the agency
+     * @param imageId  the ID of the driver image to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteDriverImageScoped(String agencyId, UUID imageId) {
+        Optional<DriverImage> existingDriverImage = driverImageRepository.findById(imageId);
+        if (existingDriverImage.isPresent()) {
+            Optional<com.example.agencyadmin.Models.Driver> driver = driverRepository
+                    .findById(existingDriverImage.get().getDriverId());
+            if (driver.isPresent() && driver.get().getAgencyid().equals(agencyId)) {
+                return deleteDriverImage(imageId);
+            }
         }
         return false;
     }

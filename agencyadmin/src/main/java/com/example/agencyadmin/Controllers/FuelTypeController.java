@@ -39,6 +39,20 @@ public class FuelTypeController {
     }
 
     /**
+     * Create a new fuel type for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param fuelTypeDTO the fuel type data
+     * @return ResponseEntity with the created fuel type DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<FuelTypeDTO> createFuelTypeScoped(@PathVariable String agencyId,
+            @RequestBody FuelTypeDTO fuelTypeDTO) {
+        FuelTypeDTO createdFuelType = fuelTypeService.createFuelTypeScoped(agencyId, fuelTypeDTO);
+        return new ResponseEntity<>(createdFuelType, HttpStatus.CREATED);
+    }
+
+    /**
      * Get a fuel type by its ID
      * 
      * @param fuelTypeId the ID of the fuel type
@@ -106,6 +120,23 @@ public class FuelTypeController {
     }
 
     /**
+     * Update an existing fuel type for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param fuelTypeId  the ID of the fuel type to update
+     * @param fuelTypeDTO the updated fuel type data
+     * @return ResponseEntity with the updated fuel type DTO if successful
+     */
+    @PutMapping("/agency/{agencyId}/{fuelTypeId}")
+    public ResponseEntity<FuelTypeDTO> updateFuelTypeScoped(@PathVariable String agencyId,
+            @PathVariable UUID fuelTypeId,
+            @RequestBody FuelTypeDTO fuelTypeDTO) {
+        return fuelTypeService.updateFuelTypeScoped(agencyId, fuelTypeId, fuelTypeDTO)
+                .map(type -> new ResponseEntity<>(type, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Delete a fuel type by its ID
      * 
      * @param fuelTypeId the ID of the fuel type to delete
@@ -115,6 +146,21 @@ public class FuelTypeController {
     @DeleteMapping("/{fuelTypeId}")
     public ResponseEntity<Void> deleteFuelType(@PathVariable UUID fuelTypeId) {
         if (fuelTypeService.deleteFuelType(fuelTypeId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a fuel type for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param fuelTypeId the ID of the fuel type to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{fuelTypeId}")
+    public ResponseEntity<Void> deleteFuelTypeScoped(@PathVariable String agencyId, @PathVariable UUID fuelTypeId) {
+        if (fuelTypeService.deleteFuelTypeScoped(agencyId, fuelTypeId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

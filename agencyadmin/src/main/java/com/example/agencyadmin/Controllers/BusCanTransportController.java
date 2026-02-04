@@ -49,6 +49,20 @@ public class BusCanTransportController {
                 .body(service.createTransportable(dto));
     }
 
+    /**
+     * Create a new transportable item for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param dto      the transportable item data
+     * @return ResponseEntity with the created transportable item DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<BusCanTransportDTO> createTransportableScoped(@PathVariable String agencyId,
+            @RequestBody BusCanTransportDTO dto) {
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED)
+                .body(service.createTransportableScoped(agencyId, dto));
+    }
+
     @PutMapping("/{transportId}")
     public ResponseEntity<BusCanTransportDTO> updateTransportable(@PathVariable UUID transportId,
             @RequestBody BusCanTransportDTO dto) {
@@ -57,9 +71,41 @@ public class BusCanTransportController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Update an existing transportable item for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param transportId the ID of the transportable item to update
+     * @param dto         the updated transportable item data
+     * @return ResponseEntity with the updated transportable item DTO if successful
+     */
+    @PutMapping("/agency/{agencyId}/{transportId}")
+    public ResponseEntity<BusCanTransportDTO> updateTransportableScoped(@PathVariable String agencyId,
+            @PathVariable UUID transportId, @RequestBody BusCanTransportDTO dto) {
+        return service.updateTransportableScoped(agencyId, transportId, dto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{transportId}")
     public ResponseEntity<Void> deleteTransportable(@PathVariable UUID transportId) {
         if (service.deleteTransportable(transportId)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    /**
+     * Delete a transportable item for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param transportId the ID of the transportable item to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{transportId}")
+    public ResponseEntity<Void> deleteTransportableScoped(@PathVariable String agencyId,
+            @PathVariable UUID transportId) {
+        if (service.deleteTransportableScoped(agencyId, transportId)) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

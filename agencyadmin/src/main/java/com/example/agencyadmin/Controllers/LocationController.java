@@ -20,26 +20,44 @@ import com.example.agencyadmin.Services.LocationService;
 @RequestMapping("/api/v1/locations")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class LocationController {
-    
+
     /** The Location service for business logic */
     @Autowired
     private LocationService locationService;
-    
+
     /**
      * Create a new location
+     * 
      * @param locationDTO the location data transfer object
-     * @return ResponseEntity with the created location DTO and HTTP 201 Created status
+     * @return ResponseEntity with the created location DTO and HTTP 201 Created
+     *         status
      */
     @PostMapping
     public ResponseEntity<LocationDTO> createLocation(@RequestBody LocationDTO locationDTO) {
         LocationDTO createdLocation = locationService.createLocation(locationDTO);
         return new ResponseEntity<>(createdLocation, HttpStatus.CREATED);
     }
-    
+
+    /**
+     * Create a new location for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param locationDTO the location data
+     * @return ResponseEntity with the created location DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<LocationDTO> createLocationScoped(@PathVariable String agencyId,
+            @RequestBody LocationDTO locationDTO) {
+        LocationDTO createdLocation = locationService.createLocationScoped(agencyId, locationDTO);
+        return new ResponseEntity<>(createdLocation, HttpStatus.CREATED);
+    }
+
     /**
      * Get a location by its ID
+     * 
      * @param locationId the ID of the location
-     * @return ResponseEntity with the location DTO if found, otherwise 404 Not Found
+     * @return ResponseEntity with the location DTO if found, otherwise 404 Not
+     *         Found
      */
     @GetMapping("/{locationId}")
     public ResponseEntity<LocationDTO> getLocationById(@PathVariable UUID locationId) {
@@ -47,9 +65,10 @@ public class LocationController {
                 .map(location -> new ResponseEntity<>(location, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Get all locations
+     * 
      * @return ResponseEntity with list of all location DTOs and HTTP 200 OK status
      */
     @GetMapping
@@ -57,9 +76,10 @@ public class LocationController {
         List<LocationDTO> locations = locationService.getAllLocations();
         return new ResponseEntity<>(locations, HttpStatus.OK);
     }
-    
+
     /**
      * Get all locations for a specific agency
+     * 
      * @param agencyId the ID of the agency
      * @return ResponseEntity with list of location DTOs for the agency
      */
@@ -68,11 +88,13 @@ public class LocationController {
         List<LocationDTO> locations = locationService.getLocationsByAgency(agencyId);
         return new ResponseEntity<>(locations, HttpStatus.OK);
     }
-    
+
     /**
      * Get a location by its name
+     * 
      * @param locationName the name of the location
-     * @return ResponseEntity with the location DTO if found, otherwise 404 Not Found
+     * @return ResponseEntity with the location DTO if found, otherwise 404 Not
+     *         Found
      */
     @GetMapping("/name/{locationName}")
     public ResponseEntity<LocationDTO> getLocationByName(@PathVariable String locationName) {
@@ -80,28 +102,64 @@ public class LocationController {
                 .map(location -> new ResponseEntity<>(location, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
     /**
      * Update an existing location
-     * @param locationId the ID of the location to update
+     * 
+     * @param locationId  the ID of the location to update
      * @param locationDTO the updated location data
-     * @return ResponseEntity with the updated location DTO if successful, otherwise 404 Not Found
+     * @return ResponseEntity with the updated location DTO if successful, otherwise
+     *         404 Not Found
      */
     @PutMapping("/{locationId}")
-    public ResponseEntity<LocationDTO> updateLocation(@PathVariable UUID locationId, @RequestBody LocationDTO locationDTO) {
+    public ResponseEntity<LocationDTO> updateLocation(@PathVariable UUID locationId,
+            @RequestBody LocationDTO locationDTO) {
         return locationService.updateLocation(locationId, locationDTO)
                 .map(location -> new ResponseEntity<>(location, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
+
+    /**
+     * Update an existing location for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param locationId  the ID of the location to update
+     * @param locationDTO the updated location data
+     * @return ResponseEntity with the updated location DTO if successful
+     */
+    @PutMapping("/agency/{agencyId}/{locationId}")
+    public ResponseEntity<LocationDTO> updateLocationScoped(@PathVariable String agencyId,
+            @PathVariable UUID locationId, @RequestBody LocationDTO locationDTO) {
+        return locationService.updateLocationScoped(agencyId, locationId, locationDTO)
+                .map(location -> new ResponseEntity<>(location, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     /**
      * Delete a location by its ID
+     * 
      * @param locationId the ID of the location to delete
-     * @return ResponseEntity with HTTP 204 No Content if successful, otherwise 404 Not Found
+     * @return ResponseEntity with HTTP 204 No Content if successful, otherwise 404
+     *         Not Found
      */
     @DeleteMapping("/{locationId}")
     public ResponseEntity<Void> deleteLocation(@PathVariable UUID locationId) {
         if (locationService.deleteLocation(locationId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a location for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param locationId the ID of the location to delete
+     * @return ResponseEntity with HTTP 204 No Content if successful
+     */
+    @DeleteMapping("/agency/{agencyId}/{locationId}")
+    public ResponseEntity<Void> deleteLocationScoped(@PathVariable String agencyId, @PathVariable UUID locationId) {
+        if (locationService.deleteLocationScoped(agencyId, locationId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

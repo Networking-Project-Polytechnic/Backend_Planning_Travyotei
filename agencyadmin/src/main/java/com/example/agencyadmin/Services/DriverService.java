@@ -27,16 +27,22 @@ public class DriverService {
     @Autowired
     private DriverMapper driverMapper;
 
-    /**
-     * Create a new driver
-     * 
-     * @param driverDTO the driver data transfer object
-     * @return the created driver DTO
-     */
     public DriverDTO createDriver(DriverDTO driverDTO) {
         Driver driver = driverMapper.toEntity(driverDTO);
         Driver savedDriver = driverRepository.save(driver);
         return driverMapper.toDTO(savedDriver);
+    }
+
+    /**
+     * Create a new driver for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param driverDTO the driver data
+     * @return the created driver DTO
+     */
+    public DriverDTO createDriverScoped(String agencyId, DriverDTO driverDTO) {
+        driverDTO.setAgencyid(agencyId);
+        return createDriver(driverDTO);
     }
 
     /**
@@ -122,6 +128,23 @@ public class DriverService {
     }
 
     /**
+     * Update an existing driver for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param driverId  the ID of the driver to update
+     * @param driverDTO the updated driver data
+     * @return the updated driver DTO if successful
+     */
+    public Optional<DriverDTO> updateDriverScoped(String agencyId, UUID driverId, DriverDTO driverDTO) {
+        Optional<Driver> existingDriver = driverRepository.findById(driverId);
+        if (existingDriver.isPresent() && existingDriver.get().getAgencyid().equals(agencyId)) {
+            driverDTO.setAgencyid(agencyId); // Ensure agencyid remains correct
+            return updateDriver(driverId, driverDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a driver by its ID
      * 
      * @param driverId the ID of the driver to delete
@@ -131,6 +154,21 @@ public class DriverService {
         if (driverRepository.existsById(driverId)) {
             driverRepository.deleteById(driverId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a driver for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param driverId the ID of the driver to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteDriverScoped(String agencyId, UUID driverId) {
+        Optional<Driver> existingDriver = driverRepository.findById(driverId);
+        if (existingDriver.isPresent() && existingDriver.get().getAgencyid().equals(agencyId)) {
+            return deleteDriver(driverId);
         }
         return false;
     }

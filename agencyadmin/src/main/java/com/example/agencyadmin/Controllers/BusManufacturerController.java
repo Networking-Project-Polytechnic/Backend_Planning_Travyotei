@@ -40,6 +40,21 @@ public class BusManufacturerController {
     }
 
     /**
+     * Create a new bus manufacturer for a specific agency
+     * 
+     * @param agencyId           the ID of the agency
+     * @param busManufacturerDTO the bus manufacturer data
+     * @return ResponseEntity with the created bus manufacturer DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<BusManufacturerDTO> createBusManufacturerScoped(@PathVariable String agencyId,
+            @RequestBody BusManufacturerDTO busManufacturerDTO) {
+        BusManufacturerDTO createdBusManufacturer = busManufacturerService.createBusManufacturerScoped(agencyId,
+                busManufacturerDTO);
+        return new ResponseEntity<>(createdBusManufacturer, HttpStatus.CREATED);
+    }
+
+    /**
      * Get a bus manufacturer by its ID
      * 
      * @param manufacturerId the ID of the bus manufacturer
@@ -108,6 +123,22 @@ public class BusManufacturerController {
     }
 
     /**
+     * Update an existing bus manufacturer for a specific agency
+     * 
+     * @param agencyId           the ID of the agency
+     * @param manufacturerId     the ID of the bus manufacturer to update
+     * @param busManufacturerDTO the updated bus manufacturer data
+     * @return ResponseEntity with the updated bus manufacturer DTO if successful
+     */
+    @PutMapping("/agency/{agencyId}/{manufacturerId}")
+    public ResponseEntity<BusManufacturerDTO> updateBusManufacturerScoped(@PathVariable String agencyId,
+            @PathVariable UUID manufacturerId, @RequestBody BusManufacturerDTO busManufacturerDTO) {
+        return busManufacturerService.updateBusManufacturerScoped(agencyId, manufacturerId, busManufacturerDTO)
+                .map(manufacturer -> new ResponseEntity<>(manufacturer, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Delete a bus manufacturer by its ID
      * 
      * @param manufacturerId the ID of the bus manufacturer to delete
@@ -117,6 +148,22 @@ public class BusManufacturerController {
     @DeleteMapping("/{manufacturerId}")
     public ResponseEntity<Void> deleteBusManufacturer(@PathVariable UUID manufacturerId) {
         if (busManufacturerService.deleteBusManufacturer(manufacturerId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a bus manufacturer for a specific agency
+     * 
+     * @param agencyId       the ID of the agency
+     * @param manufacturerId the ID of the bus manufacturer to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{manufacturerId}")
+    public ResponseEntity<Void> deleteBusManufacturerScoped(@PathVariable String agencyId,
+            @PathVariable UUID manufacturerId) {
+        if (busManufacturerService.deleteBusManufacturerScoped(agencyId, manufacturerId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

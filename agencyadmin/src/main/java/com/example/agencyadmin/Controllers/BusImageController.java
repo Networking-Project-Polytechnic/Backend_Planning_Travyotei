@@ -48,6 +48,22 @@ public class BusImageController {
     }
 
     /**
+     * Create a new bus image for a specific agency.
+     * Validates that the bus belongs to the agency.
+     * 
+     * @param agencyId    the ID of the agency
+     * @param busImageDTO the bus image data
+     * @return ResponseEntity with the created bus image DTO if successful
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<BusImageDTO> createBusImageScoped(@PathVariable UUID agencyId,
+            @RequestBody BusImageDTO busImageDTO) {
+        return busImageService.createBusImageScoped(agencyId, busImageDTO)
+                .map(image -> new ResponseEntity<>(image, HttpStatus.CREATED))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Get a bus image by its ID
      * 
      * @param imageId the ID of the bus image
@@ -151,6 +167,22 @@ public class BusImageController {
     @DeleteMapping("/{imageId}")
     public ResponseEntity<Void> deleteBusImage(@PathVariable UUID imageId) {
         if (busImageService.deleteBusImage(imageId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a bus image for a specific agency.
+     * Validates that the bus associated with the image belongs to the agency.
+     * 
+     * @param agencyId the ID of the agency
+     * @param imageId  the ID of the bus image to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{imageId}")
+    public ResponseEntity<Void> deleteBusImageScoped(@PathVariable UUID agencyId, @PathVariable UUID imageId) {
+        if (busImageService.deleteBusImageScoped(agencyId, imageId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

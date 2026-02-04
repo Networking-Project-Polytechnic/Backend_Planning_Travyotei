@@ -48,6 +48,22 @@ public class DriverImageController {
     }
 
     /**
+     * Create a new driver image for a specific agency.
+     * Validates that the driver belongs to the agency.
+     * 
+     * @param agencyId       the ID of the agency
+     * @param driverImageDTO the driver image data
+     * @return ResponseEntity with the created driver image DTO if successful
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<DriverImageDTO> createDriverImageScoped(@PathVariable String agencyId,
+            @RequestBody DriverImageDTO driverImageDTO) {
+        return driverImageService.createDriverImageScoped(agencyId, driverImageDTO)
+                .map(image -> new ResponseEntity<>(image, HttpStatus.CREATED))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Get a driver image by its ID
      * 
      * @param imageId the ID of the driver image
@@ -153,6 +169,22 @@ public class DriverImageController {
     @DeleteMapping("/{imageId}")
     public ResponseEntity<Void> deleteDriverImage(@PathVariable UUID imageId) {
         if (driverImageService.deleteDriverImage(imageId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a driver image for a specific agency.
+     * Validates that the driver associated with the image belongs to the agency.
+     * 
+     * @param agencyId the ID of the agency
+     * @param imageId  the ID of the driver image to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{imageId}")
+    public ResponseEntity<Void> deleteDriverImageScoped(@PathVariable String agencyId, @PathVariable UUID imageId) {
+        if (driverImageService.deleteDriverImageScoped(agencyId, imageId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

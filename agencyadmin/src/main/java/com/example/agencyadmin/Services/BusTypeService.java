@@ -28,16 +28,22 @@ public class BusTypeService {
     @Autowired
     private BusTypeMapper busTypeMapper;
 
-    /**
-     * Create a new bus type
-     * 
-     * @param busTypeDTO the bus type data transfer object
-     * @return the created bus type DTO
-     */
     public BusTypeDTO createBusType(BusTypeDTO busTypeDTO) {
         BusType busType = busTypeMapper.toEntity(busTypeDTO);
         BusType savedBusType = busTypeRepository.save(busType);
         return busTypeMapper.toDTO(savedBusType);
+    }
+
+    /**
+     * Create a new bus type for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param busTypeDTO the bus type data
+     * @return the created bus type DTO
+     */
+    public BusTypeDTO createBusTypeScoped(String agencyId, BusTypeDTO busTypeDTO) {
+        busTypeDTO.setAgencyId(agencyId);
+        return createBusType(busTypeDTO);
     }
 
     /**
@@ -97,6 +103,23 @@ public class BusTypeService {
     }
 
     /**
+     * Update an existing bus type for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param busTypeId  the ID of the bus type to update
+     * @param busTypeDTO the updated bus type data
+     * @return the updated bus type DTO if successful
+     */
+    public Optional<BusTypeDTO> updateBusTypeScoped(String agencyId, UUID busTypeId, BusTypeDTO busTypeDTO) {
+        Optional<BusType> existingBusType = busTypeRepository.findById(busTypeId);
+        if (existingBusType.isPresent() && existingBusType.get().getAgencyid().equals(agencyId)) {
+            busTypeDTO.setAgencyId(agencyId); // Ensure agencyId remains correct
+            return updateBusType(busTypeId, busTypeDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a bus type by its ID
      * 
      * @param busTypeId the ID of the bus type to delete
@@ -106,6 +129,21 @@ public class BusTypeService {
         if (busTypeRepository.existsById(busTypeId)) {
             busTypeRepository.deleteById(busTypeId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a bus type for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param busTypeId the ID of the bus type to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteBusTypeScoped(String agencyId, UUID busTypeId) {
+        Optional<BusType> existingBusType = busTypeRepository.findById(busTypeId);
+        if (existingBusType.isPresent() && existingBusType.get().getAgencyid().equals(agencyId)) {
+            return deleteBusType(busTypeId);
         }
         return false;
     }

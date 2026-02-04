@@ -41,6 +41,21 @@ public class TransmissionTypeController {
     }
 
     /**
+     * Create a new transmission type for a specific agency
+     * 
+     * @param agencyId            the ID of the agency
+     * @param transmissionTypeDTO the transmission type data
+     * @return ResponseEntity with the created transmission type DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<TransmissionTypeDTO> createTransmissionTypeScoped(@PathVariable String agencyId,
+            @RequestBody TransmissionTypeDTO transmissionTypeDTO) {
+        TransmissionTypeDTO createdTransmissionType = transmissionTypeService.createTransmissionTypeScoped(agencyId,
+                transmissionTypeDTO);
+        return new ResponseEntity<>(createdTransmissionType, HttpStatus.CREATED);
+    }
+
+    /**
      * Get a transmission type by its ID
      * 
      * @param transmissionTypeId the ID of the transmission type
@@ -109,6 +124,22 @@ public class TransmissionTypeController {
     }
 
     /**
+     * Update an existing transmission type for a specific agency
+     * 
+     * @param agencyId            the ID of the agency
+     * @param transmissionTypeId  the ID of the transmission type to update
+     * @param transmissionTypeDTO the updated transmission type data
+     * @return ResponseEntity with the updated transmission type DTO if successful
+     */
+    @PutMapping("/agency/{agencyId}/{transmissionTypeId}")
+    public ResponseEntity<TransmissionTypeDTO> updateTransmissionTypeScoped(@PathVariable String agencyId,
+            @PathVariable UUID transmissionTypeId, @RequestBody TransmissionTypeDTO transmissionTypeDTO) {
+        return transmissionTypeService.updateTransmissionTypeScoped(agencyId, transmissionTypeId, transmissionTypeDTO)
+                .map(type -> new ResponseEntity<>(type, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Delete a transmission type by its ID
      * 
      * @param transmissionTypeId the ID of the transmission type to delete
@@ -118,6 +149,22 @@ public class TransmissionTypeController {
     @DeleteMapping("/{transmissionTypeId}")
     public ResponseEntity<Void> deleteTransmissionType(@PathVariable UUID transmissionTypeId) {
         if (transmissionTypeService.deleteTransmissionType(transmissionTypeId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a transmission type for a specific agency
+     * 
+     * @param agencyId           the ID of the agency
+     * @param transmissionTypeId the ID of the transmission type to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{transmissionTypeId}")
+    public ResponseEntity<Void> deleteTransmissionTypeScoped(@PathVariable String agencyId,
+            @PathVariable UUID transmissionTypeId) {
+        if (transmissionTypeService.deleteTransmissionTypeScoped(agencyId, transmissionTypeId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

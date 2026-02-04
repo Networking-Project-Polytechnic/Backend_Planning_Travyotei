@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.agencyadmin.DTOs.BusImageDTO;
 import com.example.agencyadmin.Models.BusImage;
 import com.example.agencyadmin.Repositories.BusImageRepository;
+import com.example.agencyadmin.Repositories.BusRepository;
 import com.example.agencyadmin.Mappers.BusImageMapper;
 
 /**
@@ -28,6 +29,9 @@ public class BusImageService {
     @Autowired
     private BusImageMapper busImageMapper;
 
+    @Autowired
+    private BusRepository busRepository;
+
     /**
      * Create a new bus image record (metadata only).
      * 
@@ -42,6 +46,20 @@ public class BusImageService {
         }
         BusImage savedBusImage = busImageRepository.save(busImage);
         return busImageMapper.toDTO(savedBusImage);
+    }
+
+    /**
+     * Create a new bus image for a specific agency.
+     * Validates that the bus belongs to the agency.
+     * 
+     * @param agencyId    the ID of the agency
+     * @param busImageDTO the bus image data
+     * @return the created bus image DTO if successful
+     */
+    public Optional<BusImageDTO> createBusImageScoped(UUID agencyId, BusImageDTO busImageDTO) {
+        return busRepository.findById(busImageDTO.getBusId())
+                .filter(bus -> bus.getAgencyId().equals(agencyId))
+                .map(bus -> createBusImage(busImageDTO));
     }
 
     /**
@@ -155,6 +173,26 @@ public class BusImageService {
         if (busImageRepository.existsById(imageId)) {
             busImageRepository.deleteById(imageId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a bus image for a specific agency.
+     * Validates that the bus associated with the image belongs to the agency.
+     * 
+     * @param agencyId the ID of the agency
+     * @param imageId  the ID of the bus image to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteBusImageScoped(UUID agencyId, UUID imageId) {
+        Optional<BusImage> existingBusImage = busImageRepository.findById(imageId);
+        if (existingBusImage.isPresent()) {
+            Optional<com.example.agencyadmin.Models.Bus> bus = busRepository
+                    .findById(existingBusImage.get().getBusId());
+            if (bus.isPresent() && bus.get().getAgencyId().equals(agencyId)) {
+                return deleteBusImage(imageId);
+            }
         }
         return false;
     }

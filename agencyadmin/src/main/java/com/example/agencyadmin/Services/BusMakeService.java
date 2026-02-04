@@ -28,16 +28,22 @@ public class BusMakeService {
     @Autowired
     private BusMakeMapper busMakeMapper;
 
-    /**
-     * Create a new bus make
-     * 
-     * @param busMakeDTO the bus make data transfer object
-     * @return the created bus make DTO
-     */
     public BusMakeDTO createBusMake(BusMakeDTO busMakeDTO) {
         BusMakes busMake = busMakeMapper.toEntity(busMakeDTO);
         BusMakes savedBusMake = busMakeRepository.save(busMake);
         return busMakeMapper.toDTO(savedBusMake);
+    }
+
+    /**
+     * Create a new bus make for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param busMakeDTO the bus make data
+     * @return the created bus make DTO
+     */
+    public BusMakeDTO createBusMakeScoped(String agencyId, BusMakeDTO busMakeDTO) {
+        busMakeDTO.setAgencyId(agencyId);
+        return createBusMake(busMakeDTO);
     }
 
     /**
@@ -97,6 +103,23 @@ public class BusMakeService {
     }
 
     /**
+     * Update an existing bus make for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param busMakeId  the ID of the bus make to update
+     * @param busMakeDTO the updated bus make data
+     * @return the updated bus make DTO if successful
+     */
+    public Optional<BusMakeDTO> updateBusMakeScoped(String agencyId, UUID busMakeId, BusMakeDTO busMakeDTO) {
+        Optional<BusMakes> existingBusMake = busMakeRepository.findById(busMakeId);
+        if (existingBusMake.isPresent() && existingBusMake.get().getAgencyid().equals(agencyId)) {
+            busMakeDTO.setAgencyId(agencyId); // Ensure agencyId remains correct
+            return updateBusMake(busMakeId, busMakeDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a bus make by its ID
      * 
      * @param busMakeId the ID of the bus make to delete
@@ -106,6 +129,21 @@ public class BusMakeService {
         if (busMakeRepository.existsById(busMakeId)) {
             busMakeRepository.deleteById(busMakeId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a bus make for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param busMakeId the ID of the bus make to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteBusMakeScoped(String agencyId, UUID busMakeId) {
+        Optional<BusMakes> existingBusMake = busMakeRepository.findById(busMakeId);
+        if (existingBusMake.isPresent() && existingBusMake.get().getAgencyid().equals(agencyId)) {
+            return deleteBusMake(busMakeId);
         }
         return false;
     }

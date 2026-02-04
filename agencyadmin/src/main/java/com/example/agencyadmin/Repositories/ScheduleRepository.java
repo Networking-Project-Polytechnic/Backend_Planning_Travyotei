@@ -68,4 +68,32 @@ public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
     java.util.List<Schedule> findByAgencyidAndDateAndDeparturetime(String agencyid, String date, String departuretime);
 
     void deleteByBusid(UUID busid);
+
+    /**
+     * Find schedules across all agencies by start location, end location, and date
+     * 
+     * @param startLocationId the ID of the starting location
+     * @param stopLocationId  the ID of the ending location
+     * @param date            the date of the schedules
+     * @return list of matching schedules
+     */
+    @org.springframework.data.jpa.repository.Query("SELECT s FROM schedule s WHERE s.date = :date AND s.routeid IN (SELECT r.routeid FROM route r WHERE r.startlocationid = :startLocationId AND r.endlocationid = :stopLocationId)")
+    java.util.List<Schedule> findGlobalSchedules(
+            @org.springframework.data.repository.query.Param("startLocationId") UUID startLocationId,
+            @org.springframework.data.repository.query.Param("stopLocationId") UUID stopLocationId,
+            @org.springframework.data.repository.query.Param("date") String date);
+
+    /**
+     * Find schedules across all agencies by location names and date
+     * 
+     * @param start the name of the starting location
+     * @param stop  the name of the ending location
+     * @param date  the date of the schedules
+     * @return list of matching schedules
+     */
+    @org.springframework.data.jpa.repository.Query("SELECT s FROM schedule s WHERE s.date = :date AND s.routeid IN (SELECT r.routeid FROM route r WHERE r.startlocationid IN (SELECT l.locationid FROM location l WHERE l.locationname = :start) AND r.endlocationid IN (SELECT l.locationid FROM location l WHERE l.locationname = :stop))")
+    java.util.List<Schedule> findGlobalSchedulesByName(
+            @org.springframework.data.repository.query.Param("start") String start,
+            @org.springframework.data.repository.query.Param("stop") String stop,
+            @org.springframework.data.repository.query.Param("date") String date);
 }

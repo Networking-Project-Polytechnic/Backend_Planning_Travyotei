@@ -39,6 +39,20 @@ public class DriverController {
     }
 
     /**
+     * Create a new driver for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param driverDTO the driver data
+     * @return ResponseEntity with the created driver DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<DriverDTO> createDriverScoped(@PathVariable String agencyId,
+            @RequestBody DriverDTO driverDTO) {
+        DriverDTO createdDriver = driverService.createDriverScoped(agencyId, driverDTO);
+        return new ResponseEntity<>(createdDriver, HttpStatus.CREATED);
+    }
+
+    /**
      * Get a driver by its ID
      * 
      * @param driverId the ID of the driver
@@ -116,6 +130,22 @@ public class DriverController {
     }
 
     /**
+     * Update an existing driver for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param driverId  the ID of the driver to update
+     * @param driverDTO the updated driver data
+     * @return ResponseEntity with the updated driver DTO
+     */
+    @PutMapping("/agency/{agencyId}/{driverId}")
+    public ResponseEntity<DriverDTO> updateDriverScoped(@PathVariable String agencyId, @PathVariable UUID driverId,
+            @RequestBody DriverDTO driverDTO) {
+        return driverService.updateDriverScoped(agencyId, driverId, driverDTO)
+                .map(driver -> new ResponseEntity<>(driver, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
      * Delete a driver by its ID
      * 
      * @param driverId the ID of the driver to delete
@@ -125,6 +155,21 @@ public class DriverController {
     @DeleteMapping("/{driverId}")
     public ResponseEntity<Void> deleteDriver(@PathVariable UUID driverId) {
         if (driverService.deleteDriver(driverId)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Delete a driver for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param driverId the ID of the driver to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{driverId}")
+    public ResponseEntity<Void> deleteDriverScoped(@PathVariable String agencyId, @PathVariable UUID driverId) {
+        if (driverService.deleteDriverScoped(agencyId, driverId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

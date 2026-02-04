@@ -43,6 +43,21 @@ public class BusReviewController {
         return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(service.createReview(dto));
     }
 
+    /**
+     * Create a new review for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param dto      the review data
+     * @return ResponseEntity with the created review DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<BusReviewDTO> createReviewScoped(@PathVariable String agencyId,
+            @RequestBody BusReviewDTO dto) {
+        return service.createReviewScoped(agencyId, dto)
+                .map(res -> ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(res))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PutMapping("/{reviewId}")
     public ResponseEntity<BusReviewDTO> updateReview(@PathVariable UUID reviewId, @RequestBody BusReviewDTO dto) {
         return service.updateReview(reviewId, dto)
@@ -53,6 +68,21 @@ public class BusReviewController {
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<Void> deleteReview(@PathVariable UUID reviewId) {
         if (service.deleteReview(reviewId)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    /**
+     * Delete a review for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param reviewId the ID of the review to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{reviewId}")
+    public ResponseEntity<Void> deleteReviewScoped(@PathVariable String agencyId, @PathVariable UUID reviewId) {
+        if (service.deleteReviewScoped(agencyId, reviewId)) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

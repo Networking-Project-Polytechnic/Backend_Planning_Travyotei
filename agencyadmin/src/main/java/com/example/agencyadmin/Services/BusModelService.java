@@ -28,16 +28,22 @@ public class BusModelService {
     @Autowired
     private BusModelMapper busModelMapper;
 
-    /**
-     * Create a new bus model
-     * 
-     * @param busModelDTO the bus model data transfer object
-     * @return the created bus model DTO
-     */
     public BusModelDTO createBusModel(BusModelDTO busModelDTO) {
         BusModels busModel = busModelMapper.toEntity(busModelDTO);
         BusModels savedBusModel = busModelRepository.save(busModel);
         return busModelMapper.toDTO(savedBusModel);
+    }
+
+    /**
+     * Create a new bus model for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param busModelDTO the bus model data
+     * @return the created bus model DTO
+     */
+    public BusModelDTO createBusModelScoped(String agencyId, BusModelDTO busModelDTO) {
+        busModelDTO.setAgencyId(agencyId);
+        return createBusModel(busModelDTO);
     }
 
     /**
@@ -97,6 +103,23 @@ public class BusModelService {
     }
 
     /**
+     * Update an existing bus model for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param busModelId  the ID of the bus model to update
+     * @param busModelDTO the updated bus model data
+     * @return the updated bus model DTO if successful
+     */
+    public Optional<BusModelDTO> updateBusModelScoped(String agencyId, UUID busModelId, BusModelDTO busModelDTO) {
+        Optional<BusModels> existingBusModel = busModelRepository.findById(busModelId);
+        if (existingBusModel.isPresent() && existingBusModel.get().getAgencyid().equals(agencyId)) {
+            busModelDTO.setAgencyId(agencyId); // Ensure agencyId remains correct
+            return updateBusModel(busModelId, busModelDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a bus model by its ID
      * 
      * @param busModelId the ID of the bus model to delete
@@ -106,6 +129,21 @@ public class BusModelService {
         if (busModelRepository.existsById(busModelId)) {
             busModelRepository.deleteById(busModelId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a bus model for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param busModelId the ID of the bus model to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteBusModelScoped(String agencyId, UUID busModelId) {
+        Optional<BusModels> existingBusModel = busModelRepository.findById(busModelId);
+        if (existingBusModel.isPresent() && existingBusModel.get().getAgencyid().equals(agencyId)) {
+            return deleteBusModel(busModelId);
         }
         return false;
     }

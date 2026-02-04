@@ -14,21 +14,23 @@ import com.example.agencyadmin.Mappers.LocationMapper;
  * Service class for Location entity.
  * This service encapsulates business logic for Location operations.
  * It handles interactions between the controller and repository layers.
- * All business logic related to locations should be implemented in this service.
+ * All business logic related to locations should be implemented in this
+ * service.
  */
 @Service
 public class LocationService {
-    
+
     /** The Location repository for database operations */
     @Autowired
     private LocationRepository locationRepository;
-    
+
     /** The Location mapper for converting between entities and DTOs */
     @Autowired
     private LocationMapper locationMapper;
-    
+
     /**
      * Create a new location
+     * 
      * @param locationDTO the location data transfer object
      * @return the created location DTO
      */
@@ -37,9 +39,22 @@ public class LocationService {
         Location savedLocation = locationRepository.save(location);
         return locationMapper.toDTO(savedLocation);
     }
-    
+
+    /**
+     * Create a new location for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param locationDTO the location data
+     * @return the created location DTO
+     */
+    public LocationDTO createLocationScoped(String agencyId, LocationDTO locationDTO) {
+        locationDTO.setAgencyid(agencyId);
+        return createLocation(locationDTO);
+    }
+
     /**
      * Get a location by its ID
+     * 
      * @param locationId the ID of the location
      * @return the location DTO if found
      */
@@ -47,18 +62,20 @@ public class LocationService {
         Optional<Location> location = locationRepository.findById(locationId);
         return location.map(locationMapper::toDTO);
     }
-    
+
     /**
      * Get all locations
+     * 
      * @return list of all location DTOs
      */
     public List<LocationDTO> getAllLocations() {
         List<Location> locations = locationRepository.findAll();
         return locations.stream().map(locationMapper::toDTO).toList();
     }
-    
+
     /**
      * Get all locations for a specific agency
+     * 
      * @param agencyId the ID of the agency
      * @return list of location DTOs for the agency
      */
@@ -66,9 +83,10 @@ public class LocationService {
         List<Location> locations = locationRepository.findByAgencyid(agencyId);
         return locations.stream().map(locationMapper::toDTO).toList();
     }
-    
+
     /**
      * Get a location by its name
+     * 
      * @param locationName the name of the location
      * @return the location DTO if found
      */
@@ -76,10 +94,11 @@ public class LocationService {
         Location location = locationRepository.findByLocationname(locationName);
         return Optional.ofNullable(locationMapper.toDTO(location));
     }
-    
+
     /**
      * Update an existing location
-     * @param locationId the ID of the location to update
+     * 
+     * @param locationId  the ID of the location to update
      * @param locationDTO the updated location data
      * @return the updated location DTO
      */
@@ -94,9 +113,27 @@ public class LocationService {
         }
         return Optional.empty();
     }
-    
+
+    /**
+     * Update an existing location for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param locationId  the ID of the location to update
+     * @param locationDTO the updated location data
+     * @return the updated location DTO if successful
+     */
+    public Optional<LocationDTO> updateLocationScoped(String agencyId, UUID locationId, LocationDTO locationDTO) {
+        Optional<Location> existingLocation = locationRepository.findById(locationId);
+        if (existingLocation.isPresent() && existingLocation.get().getAgencyid().equals(agencyId)) {
+            locationDTO.setAgencyid(agencyId); // Ensure agencyId remains correct
+            return updateLocation(locationId, locationDTO);
+        }
+        return Optional.empty();
+    }
+
     /**
      * Delete a location by its ID
+     * 
      * @param locationId the ID of the location to delete
      * @return true if deletion was successful
      */
@@ -104,6 +141,21 @@ public class LocationService {
         if (locationRepository.existsById(locationId)) {
             locationRepository.deleteById(locationId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a location for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param locationId the ID of the location to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteLocationScoped(String agencyId, UUID locationId) {
+        Optional<Location> existingLocation = locationRepository.findById(locationId);
+        if (existingLocation.isPresent() && existingLocation.get().getAgencyid().equals(agencyId)) {
+            return deleteLocation(locationId);
         }
         return false;
     }

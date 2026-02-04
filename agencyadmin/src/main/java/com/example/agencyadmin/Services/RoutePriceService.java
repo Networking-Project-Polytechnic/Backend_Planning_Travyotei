@@ -28,16 +28,22 @@ public class RoutePriceService {
     @Autowired
     private RoutePriceMapper routePriceMapper;
 
-    /**
-     * Create a new route price
-     * 
-     * @param routePriceDTO the route price data transfer object
-     * @return the created route price DTO
-     */
     public RoutePriceDTO createRoutePrice(RoutePriceDTO routePriceDTO) {
         RoutePrice routePrice = routePriceMapper.toEntity(routePriceDTO);
         RoutePrice savedRoutePrice = routePriceRepository.save(routePrice);
         return routePriceMapper.toDTO(savedRoutePrice);
+    }
+
+    /**
+     * Create a new route price for a specific agency
+     * 
+     * @param agencyId      the ID of the agency
+     * @param routePriceDTO the route price data
+     * @return the created route price DTO
+     */
+    public RoutePriceDTO createRoutePriceScoped(String agencyId, RoutePriceDTO routePriceDTO) {
+        routePriceDTO.setAgencyid(agencyId);
+        return createRoutePrice(routePriceDTO);
     }
 
     /**
@@ -117,6 +123,23 @@ public class RoutePriceService {
     }
 
     /**
+     * Update an existing route price for a specific agency
+     * 
+     * @param agencyId      the ID of the agency
+     * @param priceId       the ID of the route price to update
+     * @param routePriceDTO the updated route price data
+     * @return the updated route price DTO if successful
+     */
+    public Optional<RoutePriceDTO> updateRoutePriceScoped(String agencyId, UUID priceId, RoutePriceDTO routePriceDTO) {
+        Optional<RoutePrice> existingRoutePrice = routePriceRepository.findById(priceId);
+        if (existingRoutePrice.isPresent() && existingRoutePrice.get().getAgencyid().equals(agencyId)) {
+            routePriceDTO.setAgencyid(agencyId); // Ensure agencyid remains correct
+            return updateRoutePrice(priceId, routePriceDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a route price by its ID
      * 
      * @param priceId the ID of the route price to delete
@@ -126,6 +149,21 @@ public class RoutePriceService {
         if (routePriceRepository.existsById(priceId)) {
             routePriceRepository.deleteById(priceId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a route price for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param priceId  the ID of the route price to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteRoutePriceScoped(String agencyId, UUID priceId) {
+        Optional<RoutePrice> existingRoutePrice = routePriceRepository.findById(priceId);
+        if (existingRoutePrice.isPresent() && existingRoutePrice.get().getAgencyid().equals(agencyId)) {
+            return deleteRoutePrice(priceId);
         }
         return false;
     }

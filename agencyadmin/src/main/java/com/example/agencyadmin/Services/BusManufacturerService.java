@@ -28,16 +28,22 @@ public class BusManufacturerService {
     @Autowired
     private BusManufacturerMapper busManufacturerMapper;
 
-    /**
-     * Create a new bus manufacturer
-     * 
-     * @param busManufacturerDTO the bus manufacturer data transfer object
-     * @return the created bus manufacturer DTO
-     */
     public BusManufacturerDTO createBusManufacturer(BusManufacturerDTO busManufacturerDTO) {
         BusManufacturers busManufacturer = busManufacturerMapper.toEntity(busManufacturerDTO);
         BusManufacturers savedBusManufacturer = busManufacturerRepository.save(busManufacturer);
         return busManufacturerMapper.toDTO(savedBusManufacturer);
+    }
+
+    /**
+     * Create a new bus manufacturer for a specific agency
+     * 
+     * @param agencyId           the ID of the agency
+     * @param busManufacturerDTO the bus manufacturer data
+     * @return the created bus manufacturer DTO
+     */
+    public BusManufacturerDTO createBusManufacturerScoped(String agencyId, BusManufacturerDTO busManufacturerDTO) {
+        busManufacturerDTO.setAgencyId(agencyId);
+        return createBusManufacturer(busManufacturerDTO);
     }
 
     /**
@@ -98,6 +104,24 @@ public class BusManufacturerService {
     }
 
     /**
+     * Update an existing bus manufacturer for a specific agency
+     * 
+     * @param agencyId           the ID of the agency
+     * @param manufacturerId     the ID of the bus manufacturer to update
+     * @param busManufacturerDTO the updated bus manufacturer data
+     * @return the updated bus manufacturer DTO if successful
+     */
+    public Optional<BusManufacturerDTO> updateBusManufacturerScoped(String agencyId, UUID manufacturerId,
+            BusManufacturerDTO busManufacturerDTO) {
+        Optional<BusManufacturers> existingBusManufacturer = busManufacturerRepository.findById(manufacturerId);
+        if (existingBusManufacturer.isPresent() && existingBusManufacturer.get().getAgencyid().equals(agencyId)) {
+            busManufacturerDTO.setAgencyId(agencyId); // Ensure agencyId remains correct
+            return updateBusManufacturer(manufacturerId, busManufacturerDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a bus manufacturer by its ID
      * 
      * @param manufacturerId the ID of the bus manufacturer to delete
@@ -107,6 +131,21 @@ public class BusManufacturerService {
         if (busManufacturerRepository.existsById(manufacturerId)) {
             busManufacturerRepository.deleteById(manufacturerId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a bus manufacturer for a specific agency
+     * 
+     * @param agencyId       the ID of the agency
+     * @param manufacturerId the ID of the bus manufacturer to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteBusManufacturerScoped(String agencyId, UUID manufacturerId) {
+        Optional<BusManufacturers> existingBusManufacturer = busManufacturerRepository.findById(manufacturerId);
+        if (existingBusManufacturer.isPresent() && existingBusManufacturer.get().getAgencyid().equals(agencyId)) {
+            return deleteBusManufacturer(manufacturerId);
         }
         return false;
     }

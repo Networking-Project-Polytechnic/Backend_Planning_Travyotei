@@ -27,16 +27,22 @@ public class RouteService {
     @Autowired
     private RouteMapper routeMapper;
 
-    /**
-     * Create a new route
-     * 
-     * @param routeDTO the route data transfer object
-     * @return the created route DTO
-     */
     public RouteDTO createRoute(RouteDTO routeDTO) {
         Route route = routeMapper.toEntity(routeDTO);
         Route savedRoute = routeRepository.save(route);
         return routeMapper.toDTO(savedRoute);
+    }
+
+    /**
+     * Create a new route for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param routeDTO the route data
+     * @return the created route DTO
+     */
+    public RouteDTO createRouteScoped(String agencyId, RouteDTO routeDTO) {
+        routeDTO.setAgencyid(agencyId);
+        return createRoute(routeDTO);
     }
 
     /**
@@ -105,6 +111,23 @@ public class RouteService {
     }
 
     /**
+     * Update an existing route for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param routeId  the ID of the route to update
+     * @param routeDTO the updated route data
+     * @return the updated route DTO if successful
+     */
+    public Optional<RouteDTO> updateRouteScoped(String agencyId, UUID routeId, RouteDTO routeDTO) {
+        Optional<Route> existingRoute = routeRepository.findById(routeId);
+        if (existingRoute.isPresent() && existingRoute.get().getAgencyid().equals(agencyId)) {
+            routeDTO.setAgencyid(agencyId); // Ensure agencyid remains correct
+            return updateRoute(routeId, routeDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a route by its ID
      * 
      * @param routeId the ID of the route to delete
@@ -114,6 +137,21 @@ public class RouteService {
         if (routeRepository.existsById(routeId)) {
             routeRepository.deleteById(routeId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a route for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param routeId  the ID of the route to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteRouteScoped(String agencyId, UUID routeId) {
+        Optional<Route> existingRoute = routeRepository.findById(routeId);
+        if (existingRoute.isPresent() && existingRoute.get().getAgencyid().equals(agencyId)) {
+            return deleteRoute(routeId);
         }
         return false;
     }

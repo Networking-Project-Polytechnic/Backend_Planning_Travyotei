@@ -28,16 +28,22 @@ public class FuelTypeService {
     @Autowired
     private FuelTypeMapper fuelTypeMapper;
 
-    /**
-     * Create a new fuel type
-     * 
-     * @param fuelTypeDTO the fuel type data transfer object
-     * @return the created fuel type DTO
-     */
     public FuelTypeDTO createFuelType(FuelTypeDTO fuelTypeDTO) {
         FuelType fuelType = fuelTypeMapper.toEntity(fuelTypeDTO);
         FuelType savedFuelType = fuelTypeRepository.save(fuelType);
         return fuelTypeMapper.toDTO(savedFuelType);
+    }
+
+    /**
+     * Create a new fuel type for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param fuelTypeDTO the fuel type data
+     * @return the created fuel type DTO
+     */
+    public FuelTypeDTO createFuelTypeScoped(String agencyId, FuelTypeDTO fuelTypeDTO) {
+        fuelTypeDTO.setAgencyId(agencyId);
+        return createFuelType(fuelTypeDTO);
     }
 
     /**
@@ -97,6 +103,23 @@ public class FuelTypeService {
     }
 
     /**
+     * Update an existing fuel type for a specific agency
+     * 
+     * @param agencyId    the ID of the agency
+     * @param fuelTypeId  the ID of the fuel type to update
+     * @param fuelTypeDTO the updated fuel type data
+     * @return the updated fuel type DTO if successful
+     */
+    public Optional<FuelTypeDTO> updateFuelTypeScoped(String agencyId, UUID fuelTypeId, FuelTypeDTO fuelTypeDTO) {
+        Optional<FuelType> existingFuelType = fuelTypeRepository.findById(fuelTypeId);
+        if (existingFuelType.isPresent() && existingFuelType.get().getAgencyid().equals(agencyId)) {
+            fuelTypeDTO.setAgencyId(agencyId); // Ensure agencyId remains correct
+            return updateFuelType(fuelTypeId, fuelTypeDTO);
+        }
+        return Optional.empty();
+    }
+
+    /**
      * Delete a fuel type by its ID
      * 
      * @param fuelTypeId the ID of the fuel type to delete
@@ -106,6 +129,21 @@ public class FuelTypeService {
         if (fuelTypeRepository.existsById(fuelTypeId)) {
             fuelTypeRepository.deleteById(fuelTypeId);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a fuel type for a specific agency
+     * 
+     * @param agencyId   the ID of the agency
+     * @param fuelTypeId the ID of the fuel type to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteFuelTypeScoped(String agencyId, UUID fuelTypeId) {
+        Optional<FuelType> existingFuelType = fuelTypeRepository.findById(fuelTypeId);
+        if (existingFuelType.isPresent() && existingFuelType.get().getAgencyid().equals(agencyId)) {
+            return deleteFuelType(fuelTypeId);
         }
         return false;
     }

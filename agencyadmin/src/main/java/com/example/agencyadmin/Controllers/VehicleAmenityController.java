@@ -48,6 +48,20 @@ public class VehicleAmenityController {
         return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(service.createAmenity(dto));
     }
 
+    /**
+     * Create a new vehicle amenity for a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param dto      the amenity data
+     * @return ResponseEntity with the created amenity DTO
+     */
+    @PostMapping("/agency/{agencyId}")
+    public ResponseEntity<VehicleAmenityDTO> createAmenityScoped(@PathVariable String agencyId,
+            @RequestBody VehicleAmenityDTO dto) {
+        return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED)
+                .body(service.createAmenityScoped(agencyId, dto));
+    }
+
     @PutMapping("/{amenityId}")
     public ResponseEntity<VehicleAmenityDTO> updateAmenity(@PathVariable UUID amenityId,
             @RequestBody VehicleAmenityDTO dto) {
@@ -56,9 +70,40 @@ public class VehicleAmenityController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Update an existing vehicle amenity for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param amenityId the ID of the amenity to update
+     * @param dto       the updated amenity data
+     * @return ResponseEntity with the updated amenity DTO if successful
+     */
+    @PutMapping("/agency/{agencyId}/{amenityId}")
+    public ResponseEntity<VehicleAmenityDTO> updateAmenityScoped(@PathVariable String agencyId,
+            @PathVariable UUID amenityId, @RequestBody VehicleAmenityDTO dto) {
+        return service.updateAmenityScoped(agencyId, amenityId, dto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{amenityId}")
     public ResponseEntity<Void> deleteAmenity(@PathVariable UUID amenityId) {
         if (service.deleteAmenity(amenityId)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    /**
+     * Delete a vehicle amenity for a specific agency
+     * 
+     * @param agencyId  the ID of the agency
+     * @param amenityId the ID of the amenity to delete
+     * @return ResponseEntity with HTTP 204 No Content
+     */
+    @DeleteMapping("/agency/{agencyId}/{amenityId}")
+    public ResponseEntity<Void> deleteAmenityScoped(@PathVariable String agencyId, @PathVariable UUID amenityId) {
+        if (service.deleteAmenityScoped(agencyId, amenityId)) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

@@ -17,10 +17,13 @@ public class BusReviewService {
 
     private final BusReviewRepository repository;
     private final BusReviewMapper mapper;
+    private final com.example.agencyadmin.Repositories.BusRepository busRepository;
 
-    public BusReviewService(BusReviewRepository repository, BusReviewMapper mapper) {
+    public BusReviewService(BusReviewRepository repository, BusReviewMapper mapper,
+            com.example.agencyadmin.Repositories.BusRepository busRepository) {
         this.repository = repository;
         this.mapper = mapper;
+        this.busRepository = busRepository;
     }
 
     public List<BusReviewDTO> getAllReviews() {
@@ -46,6 +49,21 @@ public class BusReviewService {
         return mapper.toDTO(repository.save(entity));
     }
 
+    /**
+     * Create a new review for a bus belonging to a specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param dto      the review data
+     * @return the created review DTO
+     */
+    public Optional<BusReviewDTO> createReviewScoped(String agencyId, BusReviewDTO dto) {
+        Optional<com.example.agencyadmin.Models.Bus> bus = busRepository.findById(dto.getBusId());
+        if (bus.isPresent() && bus.get().getAgencyId().toString().equals(agencyId)) {
+            return Optional.of(createReview(dto));
+        }
+        return Optional.empty();
+    }
+
     public Optional<BusReviewDTO> updateReview(UUID id, BusReviewDTO dto) {
         return repository.findById(id).map(existing -> {
             existing.setCustomerName(dto.getCustomerName());
@@ -60,6 +78,21 @@ public class BusReviewService {
         if (repository.existsById(id)) {
             repository.deleteById(id);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Delete a review if the associated bus belongs to the specific agency
+     * 
+     * @param agencyId the ID of the agency
+     * @param id       the ID of the review to delete
+     * @return true if deletion was successful
+     */
+    public boolean deleteReviewScoped(String agencyId, UUID id) {
+        Optional<BusReview> review = repository.findById(id);
+        if (review.isPresent() && review.get().getBus().getAgencyId().toString().equals(agencyId)) {
+            return deleteReview(id);
         }
         return false;
     }
