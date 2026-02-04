@@ -11,6 +11,8 @@ public interface DriverImageRepository extends JpaRepository<DriverImage, UUID> 
 
     Optional<DriverImage> findByPublicId(String publicId);
 
+    List<DriverImage> findByAgencyId(String agencyId);
+
     List<DriverImage> findByDriverIdAndIsPrimary(UUID driverId, Boolean isPrimary);
 
     Optional<DriverImage> findFirstByDriverIdAndIsPrimaryTrue(UUID driverId);

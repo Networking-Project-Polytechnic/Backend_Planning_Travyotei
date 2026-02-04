@@ -45,7 +45,7 @@ public class BusController {
      * @return ResponseEntity with the created bus DTO
      */
     @PostMapping("/agency/{agencyId}")
-    public ResponseEntity<BusDTO> createBusScoped(@PathVariable UUID agencyId, @RequestBody BusDTO busDTO) {
+    public ResponseEntity<BusDTO> createBusScoped(@PathVariable String agencyId, @RequestBody BusDTO busDTO) {
         BusDTO createdBus = busService.createBusScoped(agencyId, busDTO);
         return new ResponseEntity<>(createdBus, HttpStatus.CREATED);
     }
@@ -81,7 +81,7 @@ public class BusController {
      * @return ResponseEntity with list of bus DTOs for the agency
      */
     @GetMapping("/agency/{agencyId}")
-    public ResponseEntity<List<BusDTO>> getBusesByAgency(@PathVariable UUID agencyId) {
+    public ResponseEntity<List<BusDTO>> getBusesByAgency(@PathVariable String agencyId) {
         List<BusDTO> buses = busService.getBusesByAgency(agencyId);
         return new ResponseEntity<>(buses, HttpStatus.OK);
     }
@@ -123,7 +123,7 @@ public class BusController {
      * @return ResponseEntity with the updated bus DTO
      */
     @PutMapping("/agency/{agencyId}/{busId}")
-    public ResponseEntity<BusDTO> updateBusScoped(@PathVariable UUID agencyId, @PathVariable UUID busId,
+    public ResponseEntity<BusDTO> updateBusScoped(@PathVariable String agencyId, @PathVariable UUID busId,
             @RequestBody BusDTO busDTO) {
         return busService.updateBusScoped(agencyId, busId, busDTO)
                 .map(bus -> new ResponseEntity<>(bus, HttpStatus.OK))
@@ -153,7 +153,7 @@ public class BusController {
      * @return ResponseEntity with HTTP 204 No Content
      */
     @DeleteMapping("/agency/{agencyId}/{busId}")
-    public ResponseEntity<Void> deleteBusScoped(@PathVariable UUID agencyId, @PathVariable UUID busId) {
+    public ResponseEntity<Void> deleteBusScoped(@PathVariable String agencyId, @PathVariable UUID busId) {
         if (busService.deleteBusScoped(agencyId, busId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

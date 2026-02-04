@@ -56,7 +56,7 @@ public class BusImageService {
      * @param busImageDTO the bus image data
      * @return the created bus image DTO if successful
      */
-    public Optional<BusImageDTO> createBusImageScoped(UUID agencyId, BusImageDTO busImageDTO) {
+    public Optional<BusImageDTO> createBusImageScoped(String agencyId, BusImageDTO busImageDTO) {
         return busRepository.findById(busImageDTO.getBusId())
                 .filter(bus -> bus.getAgencyId().equals(agencyId))
                 .map(bus -> createBusImage(busImageDTO));
@@ -99,8 +99,6 @@ public class BusImageService {
                 .map(busImageMapper::toDTO)
                 .toList();
     }
-
-    
 
     /**
      * Get a bus image by its Public ID
@@ -183,7 +181,7 @@ public class BusImageService {
      * @param imageId  the ID of the bus image to delete
      * @return true if deletion was successful
      */
-    public boolean deleteBusImageScoped(UUID agencyId, UUID imageId) {
+    public boolean deleteBusImageScoped(String agencyId, UUID imageId) {
         Optional<BusImage> existingBusImage = busImageRepository.findById(imageId);
         if (existingBusImage.isPresent()) {
             Optional<com.example.agencyadmin.Models.Bus> bus = busRepository

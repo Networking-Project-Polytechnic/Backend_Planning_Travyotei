@@ -11,6 +11,8 @@ public interface BusImageRepository extends JpaRepository<BusImage, UUID> {
 
     Optional<BusImage> findByPublicId(String publicId);
 
+    List<BusImage> findByAgencyId(String agencyId);
+
     List<BusImage> findByBusIdAndIsPrimary(UUID busId, Boolean isPrimary);
 
     Optional<BusImage> findFirstByBusIdAndIsPrimaryTrue(UUID busId);

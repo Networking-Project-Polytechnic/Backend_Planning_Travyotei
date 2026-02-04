@@ -24,6 +24,9 @@ public class BusReview {
     @JoinColumn(name = "bus_id", nullable = false)
     private Bus bus;
 
+    @Column(name = "agencyid")
+    private String agencyId;
+
     @Column(name = "customer_name")
     private String customerName;
 
@@ -74,6 +77,14 @@ public class BusReview {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -26,6 +26,7 @@ public class BusImageMapper {
         return new BusImageDTO(
                 busImage.getImageId(),
                 busImage.getBusId(),
+                busImage.getAgencyId(),
                 busImage.getPublicId(),
                 busImage.getImageUrl(),
                 busImage.getFileName(),
@@ -55,6 +56,7 @@ public class BusImageMapper {
         busImage.setFileSize(busImageDTO.getFileSize());
         busImage.setIsPrimary(busImageDTO.getIsPrimary());
         busImage.setDescription(busImageDTO.getDescription());
+        busImage.setAgencyId(busImageDTO.getAgencyId());
         return busImage;
     }
 }

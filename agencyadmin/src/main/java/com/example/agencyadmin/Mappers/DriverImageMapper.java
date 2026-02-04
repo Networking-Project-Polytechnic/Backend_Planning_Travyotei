@@ -26,6 +26,7 @@ public class DriverImageMapper {
         return new DriverImageDTO(
                 driverImage.getImageId(),
                 driverImage.getDriverId(),
+                driverImage.getAgencyId(),
                 driverImage.getPublicId(),
                 driverImage.getImageUrl(),
                 driverImage.getFileName(),
@@ -55,6 +56,7 @@ public class DriverImageMapper {
         driverImage.setFileSize(driverImageDTO.getFileSize());
         driverImage.setIsPrimary(driverImageDTO.getIsPrimary());
         driverImage.setDescription(driverImageDTO.getDescription());
+        driverImage.setAgencyId(driverImageDTO.getAgencyId());
         return driverImage;
     }
 }

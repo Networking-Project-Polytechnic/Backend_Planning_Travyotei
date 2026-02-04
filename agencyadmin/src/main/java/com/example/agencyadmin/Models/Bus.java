@@ -24,7 +24,7 @@ public class Bus {
 
     @NotNull
     @Column(name = "agencyid")
-    private UUID agencyId;
+    private String agencyId;
     @NotNull
     private UUID busMakeId;
     @NotNull
@@ -67,11 +67,11 @@ public class Bus {
         this.busId = busId;
     }
 
-    public UUID getAgencyId() {
+    public String getAgencyId() {
         return agencyId;
     }
 
-    public void setAgencyId(UUID agencyId) {
+    public void setAgencyId(String agencyId) {
         this.agencyId = agencyId;
     }
 

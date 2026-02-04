@@ -56,7 +56,7 @@ public class BusImageController {
      * @return ResponseEntity with the created bus image DTO if successful
      */
     @PostMapping("/agency/{agencyId}")
-    public ResponseEntity<BusImageDTO> createBusImageScoped(@PathVariable UUID agencyId,
+    public ResponseEntity<BusImageDTO> createBusImageScoped(@PathVariable String agencyId,
             @RequestBody BusImageDTO busImageDTO) {
         return busImageService.createBusImageScoped(agencyId, busImageDTO)
                 .map(image -> new ResponseEntity<>(image, HttpStatus.CREATED))
@@ -181,7 +181,7 @@ public class BusImageController {
      * @return ResponseEntity with HTTP 204 No Content
      */
     @DeleteMapping("/agency/{agencyId}/{imageId}")
-    public ResponseEntity<Void> deleteBusImageScoped(@PathVariable UUID agencyId, @PathVariable UUID imageId) {
+    public ResponseEntity<Void> deleteBusImageScoped(@PathVariable String agencyId, @PathVariable UUID imageId) {
         if (busImageService.deleteBusImageScoped(agencyId, imageId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

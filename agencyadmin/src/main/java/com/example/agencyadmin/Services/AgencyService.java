@@ -50,15 +50,12 @@ public class AgencyService {
         AgencyOverviewDTO overview = new AgencyOverviewDTO();
         overview.setAgencyId(agencyId);
 
-        // Convert agencyId to UUID for BusService if needed
-        UUID agencyUuid = UUID.fromString(agencyId);
-
         // 1. Fetch filtered schedules first
         List<ScheduleDTO> schedules = scheduleService.getSchedulesByFilters(agencyId, date, departureTime);
         overview.setSchedules(schedules);
 
         // 2. Fetch Direct Agency Entities (Filtered if date/time provided)
-        List<BusDTO> allBuses = busService.getBusesByAgency(agencyUuid);
+        List<BusDTO> allBuses = busService.getBusesByAgency(agencyId);
         List<RouteDTO> allRoutes = routeService.getRoutesByAgency(agencyId);
         List<LocationDTO> allLocations = locationService.getLocationsByAgency(agencyId);
 

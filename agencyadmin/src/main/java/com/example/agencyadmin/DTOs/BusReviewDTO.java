@@ -9,6 +9,7 @@ public class BusReviewDTO {
     private String customerName;
     private Integer rating;
     private String comment;
+    private String agencyId;
     private LocalDateTime createdAt;
 
     public UUID getReviewId() {
@@ -49,6 +50,14 @@ public class BusReviewDTO {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
     }
 
     public LocalDateTime getCreatedAt() {

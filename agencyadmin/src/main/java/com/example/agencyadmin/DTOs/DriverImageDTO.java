@@ -17,6 +17,8 @@ public class DriverImageDTO {
     /** Reference to the driver that this image belongs to */
     private UUID driverId;
 
+    private String agencyId;
+
     /** The Cloudinary public ID for the image */
     private String publicId;
 
@@ -52,11 +54,12 @@ public class DriverImageDTO {
     /**
      * Constructor with all fields
      */
-    public DriverImageDTO(UUID imageId, UUID driverId, String publicId,
+    public DriverImageDTO(UUID imageId, UUID driverId, String agencyId, String publicId,
             String imageUrl, String fileName, String contentType, Long fileSize,
             Boolean isPrimary, LocalDateTime uploadedAt, String description) {
         this.imageId = imageId;
         this.driverId = driverId;
+        this.agencyId = agencyId;
         this.publicId = publicId;
         this.imageUrl = imageUrl;
         this.fileName = fileName;
@@ -83,6 +86,14 @@ public class DriverImageDTO {
 
     public void setDriverId(UUID driverId) {
         this.driverId = driverId;
+    }
+
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
     }
 
     public String getPublicId() {

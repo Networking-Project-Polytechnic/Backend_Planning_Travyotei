@@ -22,6 +22,7 @@ public class BusReviewMapper {
         dto.setRating(review.getRating());
         dto.setComment(review.getComment());
         dto.setCreatedAt(review.getCreatedAt());
+        dto.setAgencyId(review.getAgencyId());
         return dto;
     }
 
@@ -42,6 +43,7 @@ public class BusReviewMapper {
         review.setCustomerName(dto.getCustomerName());
         review.setRating(dto.getRating());
         review.setComment(dto.getComment());
+        review.setAgencyId(dto.getAgencyId());
         // CreatedAt is usually managed by Database or set explicitly if needed
         return review;
     }

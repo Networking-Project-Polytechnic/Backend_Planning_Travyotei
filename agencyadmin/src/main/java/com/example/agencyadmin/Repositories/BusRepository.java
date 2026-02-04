@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.agencyadmin.Models.Bus;
 
 public interface BusRepository extends JpaRepository<Bus, UUID> {
-    List<Bus> findByAgencyId(UUID agencyId);
+    List<Bus> findByAgencyId(String agencyId);
+
     Bus findByRegistrationNumber(String registrationNumber);
 }

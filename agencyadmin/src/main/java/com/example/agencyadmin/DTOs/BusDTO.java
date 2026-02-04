@@ -16,7 +16,7 @@ public class BusDTO {
     private UUID busId;
 
     /** Reference to the agency that owns this bus */
-    private UUID agencyId;
+    private String agencyId;
 
     /** Reference to the bus make (manufacturer brand) */
     private UUID busMakeId;
@@ -74,7 +74,7 @@ public class BusDTO {
     /**
      * Constructor with all fields including new relations
      */
-    public BusDTO(UUID busId, UUID agencyId, UUID busMakeId, UUID busModelId,
+    public BusDTO(UUID busId, String agencyId, UUID busMakeId, UUID busModelId,
             UUID manufacturerId, UUID fuelTypeId, UUID transmissionTypeId, UUID busTypeId,
             String registrationNumber, LocalDate registrationExpiryDate,
             Integer totalSeats, Float luggageCapacityKg, Float tankCapacityLiters, Float mileageKm,
@@ -108,11 +108,11 @@ public class BusDTO {
         this.busId = busId;
     }
 
-    public UUID getAgencyId() {
+    public String getAgencyId() {
         return agencyId;
     }
 
-    public void setAgencyId(UUID agencyId) {
+    public void setAgencyId(String agencyId) {
         this.agencyId = agencyId;
     }
 

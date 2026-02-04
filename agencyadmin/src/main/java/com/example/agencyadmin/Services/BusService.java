@@ -74,7 +74,7 @@ public class BusService {
      * @param busDTO   the bus data
      * @return the created bus DTO
      */
-    public BusDTO createBusScoped(UUID agencyId, BusDTO busDTO) {
+    public BusDTO createBusScoped(String agencyId, BusDTO busDTO) {
         busDTO.setAgencyId(agencyId);
         return createBus(busDTO);
     }
@@ -106,7 +106,7 @@ public class BusService {
      * @param agencyId the ID of the agency
      * @return list of bus DTOs for the agency
      */
-    public List<BusDTO> getBusesByAgency(UUID agencyId) {
+    public List<BusDTO> getBusesByAgency(String agencyId) {
         List<Bus> buses = busRepository.findByAgencyId(agencyId);
         return buses.stream().map(busMapper::toDTO).toList();
     }
@@ -170,7 +170,7 @@ public class BusService {
      * @param busDTO   the updated bus data
      * @return the updated bus DTO if successful
      */
-    public Optional<BusDTO> updateBusScoped(UUID agencyId, UUID busId, BusDTO busDTO) {
+    public Optional<BusDTO> updateBusScoped(String agencyId, UUID busId, BusDTO busDTO) {
         Optional<Bus> existingBus = busRepository.findById(busId);
         if (existingBus.isPresent() && existingBus.get().getAgencyId().equals(agencyId)) {
             busDTO.setAgencyId(agencyId); // Ensure agencyId remains correct
@@ -221,7 +221,7 @@ public class BusService {
      * @return true if deletion was successful
      */
     @org.springframework.transaction.annotation.Transactional
-    public boolean deleteBusScoped(UUID agencyId, UUID busId) {
+    public boolean deleteBusScoped(String agencyId, UUID busId) {
         Optional<Bus> existingBus = busRepository.findById(busId);
         if (existingBus.isPresent() && existingBus.get().getAgencyId().equals(agencyId)) {
             return deleteBus(busId);

@@ -26,6 +26,9 @@ public class BusImage {
     @Column(name = "bus_id", nullable = false)
     private UUID busId;
 
+    @Column(name = "agencyid")
+    private String agencyId;
+
     @NotNull
     @Column(name = "public_id", nullable = false, unique = true)
     private String publicId;
@@ -145,5 +148,13 @@ public class BusImage {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
     }
 }

@@ -17,6 +17,8 @@ public class BusImageDTO {
     /** Reference to the bus that this image belongs to */
     private UUID busId;
 
+    private String agencyId;
+
     /** The Cloudinary public ID for the image */
     private String publicId;
 
@@ -52,11 +54,12 @@ public class BusImageDTO {
     /**
      * Constructor with all fields
      */
-    public BusImageDTO(UUID imageId, UUID busId, String publicId,
+    public BusImageDTO(UUID imageId, UUID busId, String agencyId, String publicId,
             String imageUrl, String fileName, String contentType, Long fileSize,
             Boolean isPrimary, LocalDateTime uploadedAt, String description) {
         this.imageId = imageId;
         this.busId = busId;
+        this.agencyId = agencyId;
         this.publicId = publicId;
         this.imageUrl = imageUrl;
         this.fileName = fileName;
@@ -83,6 +86,14 @@ public class BusImageDTO {
 
     public void setBusId(UUID busId) {
         this.busId = busId;
+    }
+
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
     }
 
     public String getPublicId() {
