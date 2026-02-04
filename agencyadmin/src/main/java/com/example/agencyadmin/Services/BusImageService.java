@@ -100,9 +100,7 @@ public class BusImageService {
                 .toList();
     }
 
-    /** The Cloudinary Service for image operations */
-    @Autowired
-    private CloudinaryService cloudinaryService;
+    
 
     /**
      * Get a bus image by its Public ID

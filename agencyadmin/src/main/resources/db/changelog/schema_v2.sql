@@ -207,7 +207,7 @@ CREATE TABLE schedule (
     driverid UUID,
     agencyid VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uq_schedule_trip UNIQUE (agencyid, routeid, busid, date, departuretime),
+    CONSTRAINT uq_schedule_trip UNIQUE (agencyid, routeid, busid, priceid, driverid, date, departuretime),
     CONSTRAINT fk_schedule_route FOREIGN KEY (routeid) REFERENCES route(routeid),
     CONSTRAINT fk_schedule_bus FOREIGN KEY (busid) REFERENCES bus(bus_id),
     CONSTRAINT fk_schedule_price FOREIGN KEY (priceid) REFERENCES route_price(price_id),

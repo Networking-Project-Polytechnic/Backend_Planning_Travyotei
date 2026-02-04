@@ -100,13 +100,14 @@ WHERE r.agencyid = '5baa95c3-40c4-4e7d-be4b-f4aad384b904';
 -- Schedules (Trips)
 INSERT INTO schedule (scheduleid, date, arrivaltime, departuretime, routeid, busid, priceid, driverid, agencyid)
 SELECT uuid_generate_v4(), 
-       current_date + (i / 10)::int,
-       '14:00', '08:00',
+       current_date::text,
+       LPAD((10 + i)::text, 2, '0') || ':00', 
+       LPAD((5 + i)::text, 2, '0') || ':00',
        p.route_id, p.bus_id, p.price_id,
        (SELECT driver_id FROM driver WHERE agencyid = '5baa95c3-40c4-4e7d-be4b-f4aad384b904' OFFSET (i % 5) LIMIT 1),
        '5baa95c3-40c4-4e7d-be4b-f4aad384b904'
 FROM route_price p
-CROSS JOIN generate_series(1, 5) AS i
+CROSS JOIN generate_series(1, 4) AS i
 WHERE p.agencyid = '5baa95c3-40c4-4e7d-be4b-f4aad384b904'
 LIMIT 50;
 
