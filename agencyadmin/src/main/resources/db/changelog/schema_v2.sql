@@ -221,6 +221,7 @@ CREATE TABLE assignments (
     driver_id UUID NOT NULL,
     bus_id UUID NOT NULL,
     agencyid VARCHAR(100) NOT NULL,
+    assignment_date VARCHAR(50),
     assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_assign_schedule FOREIGN KEY (schedule_id) REFERENCES schedule(scheduleid) ON DELETE CASCADE,
     CONSTRAINT fk_assign_driver FOREIGN KEY (driver_id) REFERENCES driver(driver_id),

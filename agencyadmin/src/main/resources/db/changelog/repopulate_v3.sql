@@ -171,13 +171,13 @@ INSERT INTO schedule (scheduleid, date, arrivaltime, departuretime, routeid, bus
 
 -- Assignments
 -- Assignment 1 for Schedule 1
-INSERT INTO assignments (assignment_id, schedule_id, driver_id, agencyid, assignment_date) VALUES
-('E0000000-0000-0000-0000-000000000001', 'D0000000-0000-0000-0000-000000000001', '90000000-0000-0000-0000-000000000001', 'test-agency-id', TO_CHAR(CURRENT_DATE + INTERVAL '1 day', 'YYYY-MM-DD'));
+INSERT INTO assignments (assignment_id, schedule_id, driver_id, bus_id, agencyid, assignment_date) VALUES
+('E0000000-0000-0000-0000-000000000001', 'D0000000-0000-0000-0000-000000000001', '90000000-0000-0000-0000-000000000001', 'A0000000-0000-0000-0000-000000000001', 'test-agency-id', TO_CHAR(CURRENT_DATE + INTERVAL '1 day', 'YYYY-MM-DD'));
 
 -- Assignment 2 for Schedule 2
-INSERT INTO assignments (assignment_id, schedule_id, driver_id, agencyid, assignment_date) VALUES
-('E0000000-0000-0000-0000-000000000002', 'D0000000-0000-0000-0000-000000000002', '90000000-0000-0000-0000-000000000002', 'test-agency-id', TO_CHAR(CURRENT_DATE + INTERVAL '1 day', 'YYYY-MM-DD'));
+INSERT INTO assignments (assignment_id, schedule_id, driver_id, bus_id, agencyid, assignment_date) VALUES
+('E0000000-0000-0000-0000-000000000002', 'D0000000-0000-0000-0000-000000000002', '90000000-0000-0000-0000-000000000002', 'A0000000-0000-0000-0000-000000000002', 'test-agency-id', TO_CHAR(CURRENT_DATE + INTERVAL '1 day', 'YYYY-MM-DD'));
 
 -- Assignment 3 for Schedule 3
-INSERT INTO assignments (assignment_id, schedule_id, driver_id, agencyid, assignment_date) VALUES
-('E0000000-0000-0000-0000-000000000003', 'D0000000-0000-0000-0000-000000000003', '90000000-0000-0000-0000-000000000003', 'test-agency-id', TO_CHAR(CURRENT_DATE + INTERVAL '2 day', 'YYYY-MM-DD'));
+INSERT INTO assignments (assignment_id, schedule_id, driver_id, bus_id, agencyid, assignment_date) VALUES
+('E0000000-0000-0000-0000-000000000003', 'D0000000-0000-0000-0000-000000000003', '90000000-0000-0000-0000-000000000003', 'A0000000-0000-0000-0000-000000000003', 'test-agency-id', TO_CHAR(CURRENT_DATE + INTERVAL '2 day', 'YYYY-MM-DD'));

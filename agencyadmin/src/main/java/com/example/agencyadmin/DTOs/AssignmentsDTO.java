@@ -6,16 +6,19 @@ public class AssignmentsDTO {
     private UUID assignmentId;
     private UUID scheduleId;
     private UUID driverId;
+    private UUID busId;
     private String agencyId;
     private String assignmentDate;
 
     public AssignmentsDTO() {
     }
 
-    public AssignmentsDTO(UUID assignmentId, UUID scheduleId, UUID driverId, String agencyId, String assignmentDate) {
+    public AssignmentsDTO(UUID assignmentId, UUID scheduleId, UUID driverId, UUID busId, String agencyId,
+            String assignmentDate) {
         this.assignmentId = assignmentId;
         this.scheduleId = scheduleId;
         this.driverId = driverId;
+        this.busId = busId;
         this.agencyId = agencyId;
         this.assignmentDate = assignmentDate;
     }
@@ -42,6 +45,14 @@ public class AssignmentsDTO {
 
     public void setDriverId(UUID driverId) {
         this.driverId = driverId;
+    }
+
+    public UUID getBusId() {
+        return busId;
+    }
+
+    public void setBusId(UUID busId) {
+        this.busId = busId;
     }
 
     public String getAgencyId() {

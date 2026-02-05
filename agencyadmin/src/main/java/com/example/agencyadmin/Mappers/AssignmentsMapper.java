@@ -15,6 +15,7 @@ public class AssignmentsMapper {
                 assignments.getAssignmentId(),
                 assignments.getScheduleId(),
                 assignments.getDriverId(),
+                assignments.getBusId(),
                 assignments.getAgencyId(),
                 assignments.getAssignmentDate());
     }
@@ -27,6 +28,7 @@ public class AssignmentsMapper {
         assignments.setAssignmentId(assignmentsDTO.getAssignmentId());
         assignments.setScheduleId(assignmentsDTO.getScheduleId());
         assignments.setDriverId(assignmentsDTO.getDriverId());
+        assignments.setBusId(assignmentsDTO.getBusId());
         assignments.setAgencyId(assignmentsDTO.getAgencyId());
         assignments.setAssignmentDate(assignmentsDTO.getAssignmentDate());
         return assignments;

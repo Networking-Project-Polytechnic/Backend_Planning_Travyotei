@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.example.agencyadmin.DTOs.AssignmentsDTO;
 import com.example.agencyadmin.Mappers.AssignmentsMapper;
 import com.example.agencyadmin.Models.Assignments;
+import com.example.agencyadmin.Models.Schedule;
 import com.example.agencyadmin.Repositories.AssignmentsRepository;
+import com.example.agencyadmin.Repositories.ScheduleRepository;
 
 @Service
 public class AssignmentsService {
@@ -22,8 +24,20 @@ public class AssignmentsService {
     @Autowired
     private AssignmentsMapper assignmentsMapper;
 
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+
     public AssignmentsDTO createAssignment(AssignmentsDTO assignmentsDTO) {
         Assignments assignments = assignmentsMapper.toEntity(assignmentsDTO);
+        assignments.setAssignmentId(null); // Ensure it's treated as a new entity
+
+        // Auto-fill busId from schedule if not provided
+        if (assignments.getBusId() == null && assignments.getScheduleId() != null) {
+            scheduleRepository.findById(assignments.getScheduleId()).ifPresent(schedule -> {
+                assignments.setBusId(schedule.getBusid());
+            });
+        }
+
         Assignments savedAssignment = assignmentsRepository.save(assignments);
         return assignmentsMapper.toDTO(savedAssignment);
     }
@@ -61,6 +75,16 @@ public class AssignmentsService {
         return assignmentsRepository.findById(assignmentId).map(existingAssignment -> {
             existingAssignment.setScheduleId(assignmentsDTO.getScheduleId());
             existingAssignment.setDriverId(assignmentsDTO.getDriverId());
+
+            // Auto-fill or update busId
+            if (assignmentsDTO.getBusId() != null) {
+                existingAssignment.setBusId(assignmentsDTO.getBusId());
+            } else if (existingAssignment.getScheduleId() != null) {
+                scheduleRepository.findById(existingAssignment.getScheduleId()).ifPresent(schedule -> {
+                    existingAssignment.setBusId(schedule.getBusid());
+                });
+            }
+
             existingAssignment.setAgencyId(assignmentsDTO.getAgencyId());
             existingAssignment.setAssignmentDate(assignmentsDTO.getAssignmentDate());
             Assignments updatedAssignment = assignmentsRepository.save(existingAssignment);

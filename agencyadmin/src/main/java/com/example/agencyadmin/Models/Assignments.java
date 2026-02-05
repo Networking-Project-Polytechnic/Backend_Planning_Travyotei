@@ -25,6 +25,10 @@ public class Assignments {
     private UUID driverId;
 
     @NotNull
+    @Column(name = "bus_id")
+    private UUID busId;
+
+    @NotNull
     @Column(name = "agencyid")
     private String agencyId;
 
@@ -53,6 +57,14 @@ public class Assignments {
 
     public void setDriverId(UUID driverId) {
         this.driverId = driverId;
+    }
+
+    public UUID getBusId() {
+        return busId;
+    }
+
+    public void setBusId(UUID busId) {
+        this.busId = busId;
     }
 
     public String getAgencyId() {
