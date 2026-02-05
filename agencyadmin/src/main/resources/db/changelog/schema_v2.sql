@@ -245,8 +245,8 @@ CREATE TABLE bus_review (
 CREATE TABLE bus_image (
     image_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     bus_id UUID NOT NULL,
-    s3_bucket_name VARCHAR(255),
-    s3_key VARCHAR(500),
+    agencyid VARCHAR(100),
+    public_id VARCHAR(500) NOT NULL UNIQUE,
     image_url VARCHAR(1000),
     file_name VARCHAR(255),
     content_type VARCHAR(100),
@@ -260,8 +260,8 @@ CREATE TABLE bus_image (
 CREATE TABLE driver_image (
     image_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     driver_id UUID NOT NULL,
-    s3_bucket_name VARCHAR(255),
-    s3_key VARCHAR(500),
+    agencyid VARCHAR(100),
+    public_id VARCHAR(500) NOT NULL UNIQUE,
     image_url VARCHAR(1000),
     file_name VARCHAR(255),
     content_type VARCHAR(100),

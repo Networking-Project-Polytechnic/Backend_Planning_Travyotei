@@ -114,3 +114,15 @@ LIMIT 50;
 -- Simple data for another agency to prove isolation
 INSERT INTO location (locationid, locationname, agencyid) VALUES
 (uuid_generate_v4(), 'Bamenda (Up Station)', 'other-agency-id');
+
+-- Seed Assignments for the generated schedules
+INSERT INTO assignments (assignment_id, schedule_id, driver_id, bus_id, agencyid, assignment_date)
+SELECT uuid_generate_v4(), 
+       s.scheduleid, 
+       s.driverid, 
+       s.busid, 
+       s.agencyid, 
+       s.date
+FROM schedule s
+WHERE s.agencyid = '5baa95c3-40c4-4e7d-be4b-f4aad384b904'
+LIMIT 10;
