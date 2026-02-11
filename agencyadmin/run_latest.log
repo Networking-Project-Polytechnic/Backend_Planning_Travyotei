@@ -1,0 +1,56 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.example:agencyadmin >-----------------------
+[INFO] Building agencyadmin 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ agencyadmin ---
+[INFO] Deleting C:\Users\VICTUS\Desktop\Backend_Planning_Travyotei\agencyadmin\target
+[INFO] 
+[INFO] >>> spring-boot:3.5.7:run (default-cli) > test-compile @ agencyadmin >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ agencyadmin ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 18 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ agencyadmin ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 128 source files with javac [debug parameters release 17] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ agencyadmin ---
+[INFO] skip non existing resourceDirectory C:\Users\VICTUS\Desktop\Backend_Planning_Travyotei\agencyadmin\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ agencyadmin ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target\test-classes
+[INFO] 
+[INFO] <<< spring-boot:3.5.7:run (default-cli) < test-compile @ agencyadmin <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.5.7:run (default-cli) @ agencyadmin ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.7)
+
+2026-02-10T12:10:39.429+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] c.e.agencyadmin.AgencyadminApplication   : Starting AgencyadminApplication using Java 23.0.2 with PID 20956 (C:\Users\VICTUS\Desktop\Backend_Planning_Travyotei\agencyadmin\target\classes started by VICTUS in C:\Users\VICTUS\Desktop\Backend_Planning_Travyotei\agencyadmin)
+2026-02-10T12:10:39.434+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] c.e.agencyadmin.AgencyadminApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-02-10T12:10:39.589+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-10T12:10:39.589+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-02-10T12:10:42.033+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-02-10T12:10:42.038+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-10T12:10:42.148+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.example.agencyadmin.Elasticsearch.ScheduleElasticsearchRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-02-10T12:10:42.392+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 319 ms. Found 23 JPA repository interfaces.
+2026-02-10T12:10:44.099+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-02-10T12:10:44.132+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-02-10T12:10:44.134+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2026-02-10T12:10:44.246+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-02-10T12:10:44.250+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4592 ms
+2026-02-10T12:10:44.625+01:00  INFO 20956 --- [agencyadmin] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...

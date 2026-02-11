@@ -9,14 +9,18 @@ import org.springframework.web.bind.annotation.*;
 import com.example.agencyadmin.DTOs.ScheduleDTO;
 import com.example.agencyadmin.DTOs.ScheduleDetailsDTO;
 import com.example.agencyadmin.Services.ScheduleService;
+import com.example.agencyadmin.Elasticsearch.ScheduleIndex;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * REST Controller for Schedule entity.
+ * 
  * Handles HTTP requests related to schedule operations.
  * Provides endpoints for CRUD operations and schedule queries.
  * 
  * Base path: /api/v1/schedules
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/schedules")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -230,4 +234,24 @@ public class ScheduleController {
                 .searchGlobalSchedulesByName(start, stop, date);
         return new ResponseEntity<>(schedules, HttpStatus.OK);
     }
+
+    /**
+     * Search for schedules using Elasticsearch (Fuzzy/Fast)
+     * 
+     * @param start start location name
+     * @param stop  stop location name
+     * @param date  travel date
+     * @return list of matching schedule indexes
+     */
+    @GetMapping("/elastic-search/{start}/{stop}/{date}")
+    public ResponseEntity<List<ScheduleIndex>> searchSchedulesElastic(
+            @PathVariable String start,
+            @PathVariable String stop,
+            @PathVariable String date) {
+        log.info("Searching schedules in Elastic: start={}, stop={}, date={}", start, stop, date);
+        List<ScheduleIndex> results = scheduleService.searchSchedulesElastic(start, stop, date);
+        log.info("Elastic search returned {} results", results.size());
+        return new ResponseEntity<>(results, HttpStatus.OK);
+    }
+
 }

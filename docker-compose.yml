@@ -2,30 +2,47 @@ version: "3.9"
 
 services:
   app:
-    build: .
+    build:
+      context: ./agencyadmin
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/createschedule
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=00000000
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_SECURITY_PROTOCOL=PLAINTEXT
+      - ELASTICSEARCH_URIS=http://elasticsearch:9200
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      elasticsearch:
+        condition: service_started
     env_file:
       - .env
+    restart: on-failure
 
   db:
     image: postgres:15
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: createschedule
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "00000000"
     ports:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
-    env_file:
-      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d createschedule" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -40,7 +57,6 @@ services:
     ports:
       - "9092:9092"
       - "29092:29092"
-
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -63,5 +79,3 @@ services:
 volumes:
   db-data:
   es-data-v8:
-
-

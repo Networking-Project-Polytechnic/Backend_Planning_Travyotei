@@ -1,38 +1,65 @@
 spring:
   application:
     name: agencyadmin
+  main:
+    allow-bean-definition-overriding: true
   docker:
     compose:
       enabled: false
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:createschedule}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:00000000}
     driver-class-name: org.postgresql.Driver
   
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: 'true'
+    open-in-view: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        # dialect: org.hibernate.dialect.PostgreSQLDialect (redundant in Spring Boot 3.x)
         format_sql: 'true'
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
-    # Kafka bootstrap server (where Kafka is running)
-#spring.kafka.bootstrap-servers=localhost:9092
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka-70194df-aghet87-5217.d.aivencloud.com:23476}
+    admin:
+      auto-create: false
+      properties:
+        request.timeout.ms: 10000
+        default.api.timeout.ms: 10000
+    properties:
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL:SSL}
+      ssl.endpoint.identification.algorithm: ""
+      ssl.truststore.type: PEM
+      ssl.truststore.location: ${KAFKA_SSL_TRUSTSTORE_LOCATION:classpath:kafka/ca.pem}
+      ssl.keystore.type: PEM
+      ssl.keystore.location: ${KAFKA_SSL_KEYSTORE_LOCATION:classpath:kafka/service-combined.pem}
+      ssl.key.password: ""
+      ssl.protocol: TLSv1.2
+      # Some cloud brokers require a longer handshake timeout
+      ssl.connection.setup.timeout.ms: 10000
+      ssl.connection.setup.timeout.max.ms: 30000
+    listener:
+      auto-startup: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: agencyadmin-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
 
-# Consumer group id (each service can have its own group)
-#spring.kafka.consumer.group-id=location-service-group
-
-# Key & value deserialization
-#spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
-#spring.kafka.consumer.value-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URIS:http://localhost:9200}
 
 cloudinary:
-  cloud-name: ${CLOUDINARY_CLOUD_NAME}
-  api-key: ${CLOUDINARY_API_KEY}
-  api-secret: ${CLOUDINARY_API_SECRET}
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:dnr4lqejq}
+  api-key: ${CLOUDINARY_API_KEY:826994845279213}
+  api-secret: ${CLOUDINARY_API_SECRET:H0PpFIJDJj7UUt8PeAcbunasNrM}

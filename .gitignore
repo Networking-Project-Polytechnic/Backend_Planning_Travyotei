@@ -1,0 +1,11 @@
+.env
+**/*.log
+**/target/
+**/bin/
+**/*.pem
+**/*.cert
+**/*.key
+.vscode/
+node_modules/
+dist/
+build/

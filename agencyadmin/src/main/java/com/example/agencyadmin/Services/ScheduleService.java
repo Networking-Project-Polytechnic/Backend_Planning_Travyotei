@@ -4,12 +4,17 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import com.example.agencyadmin.DTOs.ScheduleDTO;
 import com.example.agencyadmin.DTOs.ScheduleDetailsDTO;
 import com.example.agencyadmin.Models.Schedule;
 import com.example.agencyadmin.Repositories.ScheduleRepository;
 import com.example.agencyadmin.Mappers.ScheduleMapper;
+import com.example.agencyadmin.Kafka.KafkaProducerService;
+import com.example.agencyadmin.Elasticsearch.ScheduleElasticsearchRepository;
+import com.example.agencyadmin.Elasticsearch.ScheduleIndex;
+import java.util.stream.Collectors;
 
 /**
  * Service class for Schedule entity.
@@ -51,6 +56,13 @@ public class ScheduleService {
     private BusMakeService busMakeService;
     @Autowired
     private BusModelService busModelService;
+
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
+
+    @Lazy
+    @Autowired(required = false)
+    private ScheduleElasticsearchRepository scheduleElasticsearchRepository;
 
     /**
      * Get comprehensive details for a specific schedule
@@ -115,7 +127,12 @@ public class ScheduleService {
     public ScheduleDTO createSchedule(ScheduleDTO scheduleDTO) {
         Schedule schedule = scheduleMapper.toEntity(scheduleDTO);
         Schedule savedSchedule = scheduleRepository.save(schedule);
-        return scheduleMapper.toDTO(savedSchedule);
+        ScheduleDTO resultDTO = scheduleMapper.toDTO(savedSchedule);
+
+        // Emit event for asynchronous indexing
+        kafkaProducerService.sendScheduleUpdate(resultDTO);
+
+        return resultDTO;
     }
 
     /**
@@ -235,7 +252,12 @@ public class ScheduleService {
             schedule.setPriceid(scheduleDTO.getPriceid());
             schedule.setDriverid(scheduleDTO.getDriverid());
             Schedule updatedSchedule = scheduleRepository.save(schedule);
-            return Optional.of(scheduleMapper.toDTO(updatedSchedule));
+            ScheduleDTO resultDTO = scheduleMapper.toDTO(updatedSchedule);
+
+            // Emit event for asynchronous indexing
+            kafkaProducerService.sendScheduleUpdate(resultDTO);
+
+            return Optional.of(resultDTO);
         }
 
         return Optional.empty();
@@ -321,5 +343,32 @@ public class ScheduleService {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
+    }
+
+    /**
+     * Search for schedules using Elasticsearch (Fuzzy & Fast)
+     * 
+     * @param startLocation location name
+     * @param stopLocation  location name
+     * @param date          date of travel
+     * @return list of matching schedule indexes
+     */
+    public List<ScheduleIndex> searchSchedulesElastic(String startLocation, String stopLocation, String date) {
+        if (scheduleElasticsearchRepository == null) {
+            return List.of(); // Elasticsearch not available
+        }
+        try {
+            if (date != null && !date.isEmpty()) {
+                return scheduleElasticsearchRepository.findByStartlocationnameAndEndlocationnameAndDate(startLocation,
+                        stopLocation, date);
+            }
+            return scheduleElasticsearchRepository
+                    .findByStartlocationnameContainingIgnoreCaseOrEndlocationnameContainingIgnoreCase(
+                            startLocation, stopLocation);
+        } catch (Exception e) {
+            // Log the error and return empty list instead of crashing
+            // This handles NoSuchIndexException and connection issues gracefully
+            return List.of();
+        }
     }
 }
