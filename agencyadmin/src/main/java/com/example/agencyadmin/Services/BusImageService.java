@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.agencyadmin.DTOs.BusImageDTO;
 import com.example.agencyadmin.Models.BusImage;
 import com.example.agencyadmin.Repositories.BusImageRepository;
@@ -19,6 +20,7 @@ import com.example.agencyadmin.Mappers.BusImageMapper;
  * service.
  */
 @Service
+@Transactional(readOnly = true)
 public class BusImageService {
 
     /** The BusImage repository for database operations */
@@ -38,6 +40,7 @@ public class BusImageService {
      * @param busImageDTO the bus image DTO containing Cloudinary metadata
      * @return the created bus image DTO
      */
+    @Transactional
     public BusImageDTO createBusImage(BusImageDTO busImageDTO) {
         BusImage busImage = busImageMapper.toEntity(busImageDTO);
         // Ensure uploadedAt is set if missing
@@ -141,6 +144,7 @@ public class BusImageService {
      * @param busImageDTO the updated bus image data
      * @return the updated bus image DTO
      */
+    @Transactional
     public Optional<BusImageDTO> updateBusImage(UUID imageId, BusImageDTO busImageDTO) {
         Optional<BusImage> existingBusImage = busImageRepository.findById(imageId);
         if (existingBusImage.isPresent()) {
@@ -165,6 +169,7 @@ public class BusImageService {
      * @param imageId the ID of the bus image to delete
      * @return true if deletion was successful
      */
+    @Transactional
     public boolean deleteBusImage(UUID imageId) {
         if (busImageRepository.existsById(imageId)) {
             busImageRepository.deleteById(imageId);

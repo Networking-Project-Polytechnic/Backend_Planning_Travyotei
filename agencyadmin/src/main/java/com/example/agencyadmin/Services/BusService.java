@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Collectors;
 import com.example.agencyadmin.DTOs.BusDTO;
 import com.example.agencyadmin.Models.Bus;
@@ -21,6 +22,7 @@ import com.example.agencyadmin.Mappers.BusReviewMapper;
  * All business logic related to buses should be implemented in this service.
  */
 @Service
+@Transactional(readOnly = true)
 public class BusService {
 
     /** The Bus repository for database operations */
@@ -61,6 +63,7 @@ public class BusService {
      * @param busDTO the bus data transfer object
      * @return the created bus DTO
      */
+    @Transactional
     public BusDTO createBus(BusDTO busDTO) {
         Bus bus = busMapper.toEntity(busDTO);
         Bus savedBus = busRepository.save(bus);
@@ -129,6 +132,7 @@ public class BusService {
      * @param busDTO the updated bus data
      * @return the updated bus DTO
      */
+    @Transactional
     public Optional<BusDTO> updateBus(UUID busId, BusDTO busDTO) {
         Optional<Bus> existingBus = busRepository.findById(busId);
         if (existingBus.isPresent()) {
@@ -185,7 +189,7 @@ public class BusService {
      * @param busId the ID of the bus to delete
      * @return true if deletion was successful
      */
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public boolean deleteBus(UUID busId) {
         if (busRepository.existsById(busId)) {
             // 1. Delete Bus Images
@@ -220,7 +224,7 @@ public class BusService {
      * @param busId    the ID of the bus to delete
      * @return true if deletion was successful
      */
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public boolean deleteBusScoped(String agencyId, UUID busId) {
         Optional<Bus> existingBus = busRepository.findById(busId);
         if (existingBus.isPresent() && existingBus.get().getAgencyId().equals(agencyId)) {

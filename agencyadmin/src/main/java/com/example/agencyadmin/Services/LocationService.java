@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.agencyadmin.DTOs.LocationDTO;
 import com.example.agencyadmin.Models.Location;
 import com.example.agencyadmin.Repositories.LocationRepository;
@@ -18,6 +19,7 @@ import com.example.agencyadmin.Mappers.LocationMapper;
  * service.
  */
 @Service
+@Transactional(readOnly = true)
 public class LocationService {
 
     /** The Location repository for database operations */
@@ -34,6 +36,7 @@ public class LocationService {
      * @param locationDTO the location data transfer object
      * @return the created location DTO
      */
+    @Transactional
     public LocationDTO createLocation(LocationDTO locationDTO) {
         Location location = locationMapper.toEntity(locationDTO);
         Location savedLocation = locationRepository.save(location);
@@ -102,6 +105,7 @@ public class LocationService {
      * @param locationDTO the updated location data
      * @return the updated location DTO
      */
+    @Transactional
     public Optional<LocationDTO> updateLocation(UUID locationId, LocationDTO locationDTO) {
         Optional<Location> existingLocation = locationRepository.findById(locationId);
         if (existingLocation.isPresent()) {
@@ -137,6 +141,7 @@ public class LocationService {
      * @param locationId the ID of the location to delete
      * @return true if deletion was successful
      */
+    @Transactional
     public boolean deleteLocation(UUID locationId) {
         if (locationRepository.existsById(locationId)) {
             locationRepository.deleteById(locationId);

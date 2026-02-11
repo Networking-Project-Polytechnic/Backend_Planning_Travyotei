@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.agencyadmin.DTOs.DriverDTO;
 import com.example.agencyadmin.Models.Driver;
 import com.example.agencyadmin.Repositories.DriverRepository;
@@ -17,6 +18,7 @@ import com.example.agencyadmin.Mappers.DriverMapper;
  * All business logic related to drivers should be implemented in this service.
  */
 @Service
+@Transactional(readOnly = true)
 public class DriverService {
 
     /** The Driver repository for database operations */
@@ -27,6 +29,7 @@ public class DriverService {
     @Autowired
     private DriverMapper driverMapper;
 
+    @Transactional
     public DriverDTO createDriver(DriverDTO driverDTO) {
         Driver driver = driverMapper.toEntity(driverDTO);
         Driver savedDriver = driverRepository.save(driver);
@@ -112,6 +115,7 @@ public class DriverService {
      * @param driverDTO the updated driver data
      * @return the updated driver DTO
      */
+    @Transactional
     public Optional<DriverDTO> updateDriver(UUID driverId, DriverDTO driverDTO) {
         Optional<Driver> existingDriver = driverRepository.findById(driverId);
         if (existingDriver.isPresent()) {
@@ -150,6 +154,7 @@ public class DriverService {
      * @param driverId the ID of the driver to delete
      * @return true if deletion was successful
      */
+    @Transactional
     public boolean deleteDriver(UUID driverId) {
         if (driverRepository.existsById(driverId)) {
             driverRepository.deleteById(driverId);

@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.agencyadmin.DTOs.RoutePriceDTO;
 import com.example.agencyadmin.Models.RoutePrice;
 import com.example.agencyadmin.Repositories.RoutePriceRepository;
@@ -18,6 +19,7 @@ import com.example.agencyadmin.Mappers.RoutePriceMapper;
  * service.
  */
 @Service
+@Transactional(readOnly = true)
 public class RoutePriceService {
 
     /** The RoutePrice repository for database operations */
@@ -28,6 +30,7 @@ public class RoutePriceService {
     @Autowired
     private RoutePriceMapper routePriceMapper;
 
+    @Transactional
     public RoutePriceDTO createRoutePrice(RoutePriceDTO routePriceDTO) {
         RoutePrice routePrice = routePriceMapper.toEntity(routePriceDTO);
         RoutePrice savedRoutePrice = routePriceRepository.save(routePrice);
@@ -107,6 +110,7 @@ public class RoutePriceService {
      * @param routePriceDTO the updated route price data
      * @return the updated route price DTO
      */
+    @Transactional
     public Optional<RoutePriceDTO> updateRoutePrice(UUID priceId, RoutePriceDTO routePriceDTO) {
         Optional<RoutePrice> existingRoutePrice = routePriceRepository.findById(priceId);
         if (existingRoutePrice.isPresent()) {
@@ -145,6 +149,7 @@ public class RoutePriceService {
      * @param priceId the ID of the route price to delete
      * @return true if deletion was successful
      */
+    @Transactional
     public boolean deleteRoutePrice(UUID priceId) {
         if (routePriceRepository.existsById(priceId)) {
             routePriceRepository.deleteById(priceId);

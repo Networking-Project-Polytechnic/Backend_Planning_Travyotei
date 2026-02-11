@@ -1,0 +1,55 @@
+﻿commit 502cc45ab7fe9e502272459b0ba6d01b820ca6c3
+Author: Ngoh1919 <aghet87@gmail.com>
+Date:   Wed Feb 11 15:04:17 2026 +0100
+
+    Configure Kafka and Elasticsearch with Docker support, and remove secrets from history
+
+.env
+.gitignore
+.vscode/settings.json
+agencyadmin/Dockerfile
+agencyadmin/app.log
+agencyadmin/build.log
+agencyadmin/buses.json
+agencyadmin/compile_errors.log
+agencyadmin/create_schedule.json
+agencyadmin/docker-compose.yml
+agencyadmin/drivers.json
+agencyadmin/locations.json
+agencyadmin/pom.xml
+agencyadmin/prices.json
+agencyadmin/routes.json
+agencyadmin/run_latest.log
+agencyadmin/run_output.txt
+agencyadmin/search_result.json
+agencyadmin/search_result_utf8.json
+agencyadmin/server_local_v8.log
+agencyadmin/server_local_v8_clean_start.log
+agencyadmin/server_local_v8_clean_start_utf8.log
+agencyadmin/server_local_v8_new.log
+agencyadmin/server_local_v8_new_utf8.log
+agencyadmin/server_local_v8_utf8.log
+agencyadmin/server_start.log
+agencyadmin/server_start_local.log
+agencyadmin/server_start_local_utf8.log
+agencyadmin/server_start_utf8.log
+agencyadmin/src/main/java/com/example/agencyadmin/AgencyadminApplication.java
+agencyadmin/src/main/java/com/example/agencyadmin/Controllers/ScheduleController.java
+agencyadmin/src/main/java/com/example/agencyadmin/Elasticsearch/ElasticsearchConfig.java
+agencyadmin/src/main/java/com/example/agencyadmin/Elasticsearch/ScheduleElasticsearchRepository.java
+agencyadmin/src/main/java/com/example/agencyadmin/Elasticsearch/ScheduleIndex.java
+agencyadmin/src/main/java/com/example/agencyadmin/Kafka/KafkaConsumerService.java
+agencyadmin/src/main/java/com/example/agencyadmin/Kafka/KafkaProducerService.java
+agencyadmin/src/main/java/com/example/agencyadmin/Kafka/KafkaTopicConfig.java
+agencyadmin/src/main/java/com/example/agencyadmin/Services/ScheduleService.java
+agencyadmin/src/main/resources/application.yaml
+agencyadmin/src/main/resources/kafka/ca.pem
+agencyadmin/src/main/resources/kafka/service-combined.pem
+agencyadmin/src/main/resources/kafka/service.cert
+agencyadmin/src/main/resources/kafka/service.key
+agencyadmin/startup.log
+agencyadmin/startup_local.log
+agencyadmin/startup_local_utf8.log
+agencyadmin/test_post.ps1
+agencyadmin/update_schedule.json
+docker-compose.yml

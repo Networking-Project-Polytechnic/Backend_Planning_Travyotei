@@ -28,7 +28,7 @@ public class RouteMapper {
                 route.getStartlocationid(),
                 route.getEndlocationid(),
                 route.getAgencyid(),
-                route.getStopPoints());
+                route.getStopPoints() != null ? new java.util.ArrayList<>(route.getStopPoints()) : null);
     }
 
     /**

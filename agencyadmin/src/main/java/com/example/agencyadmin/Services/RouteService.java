@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.agencyadmin.DTOs.RouteDTO;
 import com.example.agencyadmin.Models.Route;
 import com.example.agencyadmin.Repositories.RouteRepository;
@@ -17,6 +18,7 @@ import com.example.agencyadmin.Mappers.RouteMapper;
  * All business logic related to routes should be implemented in this service.
  */
 @Service
+@Transactional(readOnly = true)
 public class RouteService {
 
     /** The Route repository for database operations */
@@ -27,6 +29,7 @@ public class RouteService {
     @Autowired
     private RouteMapper routeMapper;
 
+    @Transactional
     public RouteDTO createRoute(RouteDTO routeDTO) {
         Route route = routeMapper.toEntity(routeDTO);
         Route savedRoute = routeRepository.save(route);
@@ -96,6 +99,7 @@ public class RouteService {
      * @param routeDTO the updated route data
      * @return the updated route DTO
      */
+    @Transactional
     public Optional<RouteDTO> updateRoute(UUID routeId, RouteDTO routeDTO) {
         Optional<Route> existingRoute = routeRepository.findById(routeId);
         if (existingRoute.isPresent()) {
@@ -133,6 +137,7 @@ public class RouteService {
      * @param routeId the ID of the route to delete
      * @return true if deletion was successful
      */
+    @Transactional
     public boolean deleteRoute(UUID routeId) {
         if (routeRepository.existsById(routeId)) {
             routeRepository.deleteById(routeId);

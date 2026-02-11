@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.agencyadmin.DTOs.BusReviewDTO;
 import com.example.agencyadmin.Mappers.BusReviewMapper;
@@ -13,6 +14,7 @@ import com.example.agencyadmin.Models.BusReview;
 import com.example.agencyadmin.Repositories.BusReviewRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class BusReviewService {
 
     private final BusReviewRepository repository;
@@ -42,6 +44,7 @@ public class BusReviewService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public BusReviewDTO createReview(BusReviewDTO dto) {
         BusReview entity = mapper.toEntity(dto);
         // Ensure bus relationship is valid if necessary calling BusRepository,
@@ -64,6 +67,7 @@ public class BusReviewService {
         return Optional.empty();
     }
 
+    @Transactional
     public Optional<BusReviewDTO> updateReview(UUID id, BusReviewDTO dto) {
         return repository.findById(id).map(existing -> {
             existing.setCustomerName(dto.getCustomerName());
@@ -74,6 +78,7 @@ public class BusReviewService {
         });
     }
 
+    @Transactional
     public boolean deleteReview(UUID id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);

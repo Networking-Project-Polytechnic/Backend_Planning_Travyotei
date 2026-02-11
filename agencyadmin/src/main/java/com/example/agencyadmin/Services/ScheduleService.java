@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.agencyadmin.DTOs.ScheduleDTO;
 import com.example.agencyadmin.DTOs.ScheduleDetailsDTO;
 import com.example.agencyadmin.Models.Schedule;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
  * service.
  */
 @Service
+@Transactional(readOnly = true)
 public class ScheduleService {
 
     /** The Schedule repository for database operations */
@@ -124,6 +126,7 @@ public class ScheduleService {
      * @param scheduleDTO the schedule data transfer object
      * @return the created schedule DTO
      */
+    @Transactional
     public ScheduleDTO createSchedule(ScheduleDTO scheduleDTO) {
         Schedule schedule = scheduleMapper.toEntity(scheduleDTO);
         Schedule savedSchedule = scheduleRepository.save(schedule);
@@ -239,6 +242,7 @@ public class ScheduleService {
      * @param scheduleDTO the updated schedule data
      * @return the updated schedule DTO
      */
+    @Transactional
     public Optional<ScheduleDTO> updateSchedule(UUID scheduleId, ScheduleDTO scheduleDTO) {
         Optional<Schedule> existingSchedule = scheduleRepository.findById(scheduleId);
         if (existingSchedule.isPresent()) {
@@ -286,6 +290,7 @@ public class ScheduleService {
      * @param scheduleId the ID of the schedule to delete
      * @return true if deletion was successful
      */
+    @Transactional
     public boolean deleteSchedule(UUID scheduleId) {
         if (scheduleRepository.existsById(scheduleId)) {
             scheduleRepository.deleteById(scheduleId);
